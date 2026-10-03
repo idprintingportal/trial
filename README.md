@@ -80,7 +80,7 @@
     'use strict';
     const APP_MARKER = 'SHIV-NIRMAL-QR';
     const QR_PREFIX = 'SQR8:';
-    const FIELD_LABELS = ['UD Number', 'Name', 'Year Of Birth', 'Dis type', 'Per of Dis', 'Date of issue', 'Valid Upto', 'Aad Number'];
+    const FIELD_LABELS = ['UDID No', 'Name', 'Year of Birth', 'Disability Type', 'Percentage of Disability', 'Date of Issue', 'Valid Upto', 'Aadhaar No'];
     const FIELD_COUNT = FIELD_LABELS.length;
     const PBKDF2_ITERATIONS = 210000;
     const encoder = new TextEncoder();
@@ -99,7 +99,10 @@
         input.type = 'text';
         input.autocomplete = 'off';
         input.placeholder = readonly ? FIELD_LABELS[i - 1] : `${FIELD_LABELS[i - 1]} भरें`;
-        if (i === 8 && !readonly) input.placeholder = 'XXXXXXXX0000 (masked Aad Number)';
+        if (i === 8 && !readonly) {
+          input.inputMode = 'numeric';
+          input.placeholder = '12 digits; QR will keep only XXXXXXXX and last 4 digits';
+        }
         if (readonly) input.readOnly = true;
         label.append(input);
         container.append(label);
@@ -152,6 +155,7 @@
         const fields = Array.from({ length: FIELD_COUNT }, (_, i) => document.getElementById(`gen_field${i + 1}`).value.trim());
         if (fields.length !== FIELD_COUNT || fields.some(value => !value)) throw new Error('QR बनाने से पहले सभी 8 बॉक्स भरें।');
         fields[7] = maskAadNumber(fields[7]);
+        document.getElementById('gen_field8').value = fields[7];
         if (!window.QRCode) throw new Error('QR generator load नहीं हुआ; internet connection जाँचें।');
 
         status.textContent = 'डेटा encrypt हो रहा है…';
