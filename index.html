@@ -41,6 +41,11 @@
   <h1>8-Field Secure QR</h1>
   <p class="intro">सभी 8 बॉक्स भरकर encrypted QR बनाएँ। Scan करने के लिए यही page खोलें, वही passphrase दें और camera से QR पढ़ें।</p>
 
+  <section id="decodedView" class="card" aria-label="Scanned QR data">
+    <div id="scanFields" class="result-fields" aria-live="polite"></div>
+    <button type="button" class="secondary" style="margin-top:22px" onclick="location.reload()">दूसरा QR स्कैन करें</button>
+  </section>
+
   <section class="card">
     <h2>1. आठ बॉक्स भरें और QR बनाएँ</h2>
     <div id="generatorFields" class="fields"></div>
@@ -67,11 +72,6 @@
     </label>
     <button type="button" class="secondary" style="margin-top:10px" onclick="decryptManualPayload()">Paste किए QR को जाँचें</button>
     <p id="scanStatus" class="status" role="status"></p>
-  </section>
-
-  <section id="decodedView" class="card" hidden aria-label="Scanned QR data">
-    <div id="scanFields" class="result-fields" aria-live="polite"></div>
-    <button type="button" class="secondary" style="margin-top:22px" onclick="location.reload()">दूसरा QR स्कैन करें</button>
   </section>
 
   <p class="hint warning">मोबाइल के सामान्य camera scanner में encrypted text दिख सकता है, लेकिन असली field values नहीं। Values देखने के लिए इस page के scanner और सही passphrase की ज़रूरत है। किसी scanner में “कुछ भी न दिखे” यह client-side QR में संभव नहीं; उसके लिए authenticated server/token व्यवस्था चाहिए।</p>
