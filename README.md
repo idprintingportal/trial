@@ -39,7 +39,7 @@
 </head>
 <body>
   <h1>8-Field Secure QR</h1>
-  <p class="intro">सभी 8 बॉक्स भरकर encrypted QR बनाएँ। Scan करने के लिए यही page खोलें, वही passphrase दें और camera से QR पढ़ें।</p>
+  <p class="intro">एक device पर 8 जानकारी भरकर QR बनाएँ। दूसरे device पर यही page खोलें, वही passphrase डालें और नीचे दिए गए app camera scanner से QR scan करें। तब values आठों boxes में भरेंगी।</p>
 
   <section id="decodedView" class="card" aria-label="Scanned QR data">
     <div id="scanFields" class="result-fields" aria-live="polite"></div>
@@ -58,7 +58,7 @@
   </section>
 
   <section class="card">
-    <h2>2. Scan करके आठों बॉक्स में डेटा दिखाएँ</h2>
+    <h2>2. इसी app से scan करके आठों बॉक्स में डेटा दिखाएँ</h2>
     <label>वही Secret passphrase
       <input id="scanPassphrase" type="password" autocomplete="off" minlength="8" placeholder="QR बनाते समय वाला passphrase" required>
     </label>
@@ -74,12 +74,11 @@
     <p id="scanStatus" class="status" role="status"></p>
   </section>
 
-  <p class="hint warning">मोबाइल के सामान्य camera scanner में encrypted text दिख सकता है, लेकिन असली field values नहीं। Values देखने के लिए इस page के scanner और सही passphrase की ज़रूरत है। किसी scanner में “कुछ भी न दिखे” यह client-side QR में संभव नहीं; उसके लिए authenticated server/token व्यवस्था चाहिए।</p>
+  <p class="hint warning">फोन के सामान्य camera/QR scanner से आठ values नहीं खुलेंगी; वह केवल unreadable encrypted text दिखाएगा। Values खोलने के लिए इसी page के camera scanner और QR बनाते समय इस्तेमाल किया गया passphrase ज़रूरी है।</p>
 
   <script>
     'use strict';
     const APP_MARKER = 'SHIV-NIRMAL-QR';
-    const QR_PREFIX = 'SQR8:';
     const FIELD_LABELS = ['UDID No', 'Name', 'Year of Birth', 'Disability Type', 'Percentage of Disability', 'Date of Issue', 'Valid Upto', 'Aadhaar No'];
     const FIELD_COUNT = FIELD_LABELS.length;
     const PBKDF2_ITERATIONS = 210000;
@@ -165,7 +164,8 @@
         const plaintext = encoder.encode(JSON.stringify({ app: APP_MARKER, version: 1, fieldCount: FIELD_COUNT, fieldNames: FIELD_LABELS, fields }));
         const ciphertext = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, plaintext));
         const packet = { version: 1, salt: toBase64Url(salt), iv: toBase64Url(iv), data: toBase64Url(ciphertext) };
-        const payload = QR_PREFIX + toBase64Url(encoder.encode(JSON.stringify(packet)));
+        // The QR carries only an opaque encrypted packet; field names and values stay encrypted.
+        const payload = toBase64Url(encoder.encode(JSON.stringify(packet)));
 
         new QRCode(output, { text: payload, width: 260, height: 260, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H });
         status.textContent = '✅ Encrypted QR तैयार है। इसमें ठीक 8 बॉक्स का data है।';
@@ -191,9 +191,8 @@
         requireCrypto();
         const passphrase = document.getElementById('scanPassphrase').value;
         if (passphrase.length < 8) throw new Error('पहले सही passphrase डालें।');
-        if (!payload.startsWith(QR_PREFIX)) throw new Error('यह इस 8-box system का QR नहीं है।');
         if (payload.length > 12000) throw new Error('QR payload सीमा से बड़ा है।');
-        const packet = JSON.parse(decoder.decode(fromBase64Url(payload.slice(QR_PREFIX.length))));
+        const packet = JSON.parse(decoder.decode(fromBase64Url(payload)));
         if (packet.version !== 1) throw new Error('QR version स्वीकार नहीं है।');
         const salt = fromBase64Url(packet.salt);
         const iv = fromBase64Url(packet.iv);
