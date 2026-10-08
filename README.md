@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AgriStack Card Generator (Centered & Fixed Layout)</title>
+  <title>AgriStack Card Generator (No Overlap Layout)</title>
   <!-- QRCode.js Library CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
@@ -125,10 +125,10 @@
       background-image: url('back-bg.png'); 
     }
 
-    /* FIXED: Vertical Dates Alignment (No Cropping) */
+    /* FIXED: Vertical Dates Positioning (Separated from table margin) */
     .vertical-date-front {
       position: absolute;
-      left: 14px;
+      left: 6px;
       bottom: 25px;
       transform: rotate(-90deg);
       transform-origin: left bottom;
@@ -136,11 +136,12 @@
       font-weight: bold;
       color: #000;
       white-space: nowrap;
+      z-index: 10;
     }
 
     .vertical-date-back {
       position: absolute;
-      left: 14px;
+      left: 6px;
       bottom: 25px;
       transform: rotate(-90deg);
       transform-origin: left bottom;
@@ -148,13 +149,14 @@
       font-weight: bold;
       color: #000;
       white-space: nowrap;
+      z-index: 10;
     }
 
-    /* Overlay positioning for Front Card */
+    /* Front Card Elements */
     .photo-box {
       position: absolute;
       top: 45px;
-      left: 28px;
+      left: 30px;
       width: 70px;
       height: 86px;
       border: 1px solid #90a4ae;
@@ -171,7 +173,7 @@
     .info-details-front {
       position: absolute;
       top: 45px;
-      left: 106px;
+      left: 108px;
       font-size: 9px;
       line-height: 1.35;
       color: #000;
@@ -204,34 +206,35 @@
       color: #1b5e20;
     }
 
-    /* FIXED: Overlay positioning for Back Card (Centered Alignment) */
+    /* Back Card Address Position */
     .disp-address-text {
       position: absolute;
       top: 42px;
-      left: 26px;
-      right: 18px;
+      left: 38px;
+      right: 15px;
       font-size: 8px;
       font-weight: 600;
       color: #000;
       line-height: 1.2;
     }
 
-    /* Table Perfectly Centered inside Card */
+    /* FIXED: Table Position (Clear Gap from Vertical Date Text) */
     .agri-table-overlay {
       position: absolute;
       top: 80px;
-      left: 50%;
-      transform: translateX(-50%); /* Keeps Table Perfectly Centered */
-      width: 272px; /* Perfect width matching grid columns */
+      left: 38px; /* Safe Margin from left edge */
+      width: 270px;
       border-collapse: collapse;
       font-size: 7.5px;
       text-align: center;
+      background: transparent;
     }
     .agri-table-overlay td {
-      padding: 2px 1px;
+      padding: 3px 1px;
       font-weight: bold;
       color: #000;
-      border-bottom: 0.5px dashed #ccc;
+      border: 0.5px solid #ccc;
+      background: #fff; /* Ensures clear visibility */
     }
 
     .print-btn {
@@ -256,7 +259,7 @@
 </head>
 <body>
 
-  <h1>AgriStack Card Generator (Centered Layout)</h1>
+  <h1>AgriStack Card Generator</h1>
 
   <div class="main-container">
     <!-- Live Form Controls -->
@@ -315,7 +318,7 @@
 
       <h2>Agriculture Table (Add Multiple Rows)</h2>
       <div id="landRowsContainer">
-        <!-- Default Initial Rows -->
+        <!-- Default Initial Row -->
         <div class="land-row-input">
           <input type="text" placeholder="State" value="MH" style="width: 35px;">
           <input type="text" placeholder="District" value="Jalgaon" style="width: 55px;">
@@ -367,7 +370,7 @@
           <b>Address:</b> <span id="dispAddress">A/P. Pachora, Tal. Pachora, Dist. Jalgaon - 424201</span>
         </div>
 
-        <!-- Dynamic Agriculture Table (Centered Layout) -->
+        <!-- Dynamic Agriculture Table -->
         <table class="agri-table-overlay" id="agriTableDisplay">
           <!-- Rows render dynamically -->
         </table>
@@ -378,7 +381,7 @@
   <button class="print-btn" onclick="window.print()">Print Cards</button>
 
   <script>
-    // Front Form Elements
+    // Form Elements
     const inputApprovalDate = document.getElementById('inputApprovalDate');
     const inputNameMr = document.getElementById('inputNameMr');
     const inputNameEn = document.getElementById('inputNameEn');
@@ -390,7 +393,6 @@
     const inputFarmerId = document.getElementById('inputFarmerId');
     const inputPhoto = document.getElementById('inputPhoto');
 
-    // Back Form Elements
     const inputDownloadDate = document.getElementById('inputDownloadDate');
     const inputAddress = document.getElementById('inputAddress');
     const qrcodeContainer = document.getElementById('qrcode');
@@ -407,7 +409,7 @@
       });
     }
 
-    // Photo Reader
+    // Photo Upload
     inputPhoto.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
@@ -419,7 +421,7 @@
       }
     });
 
-    // Dynamic Land Rows Logic
+    // Dynamic Land Table Rows
     function addLandRow() {
       const container = document.getElementById('landRowsContainer');
       const rowDiv = document.createElement('div');
@@ -460,7 +462,7 @@
           <td style="width: 46px;">${inputs[3].value}</td>
           <td style="width: 30px;">${inputs[4].value}</td>
           <td style="width: 28px;">${inputs[5].value}</td>
-          <td style="width: 40px;">${inputs[6].value}</td>
+          <td style="width: 38px;">${inputs[6].value}</td>
         `;
         tableDisplay.appendChild(tr);
       });
@@ -491,7 +493,6 @@
       updateQRCode();
     }
 
-    // Attach Listeners
     [inputApprovalDate, inputNameMr, inputNameEn, inputGender, inputDob, inputArea, inputAadhaar, inputMobile, inputFarmerId, inputDownloadDate, inputAddress].forEach(elem => {
       elem.addEventListener('input', bindSync);
     });
