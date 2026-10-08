@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mr">
 <head>
   <meta charset="UTF-8">
-  <title>AgriStack Card Generator (No Overlap Layout)</title>
+  <title>AgriStack PVC Card Generator — Template Aligned</title>
   <!-- QRCode.js Library CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
@@ -119,23 +119,33 @@
 
     /* Front & Back Background Templates */
     #frontCard {
-      background-image: url('front-bg.png'); 
+      background-image: linear-gradient(145deg,rgba(255,255,255,.9),rgba(250,250,232,.65)); 
     }
     #backCard {
-      background-image: url('back-bg.png'); 
+      background-image: linear-gradient(145deg,rgba(255,255,255,.9),rgba(247,248,224,.6)); 
     }
 
-    /* Both vertical dates stay inside the safe print area. */
-    .vertical-date-front, .vertical-date-back {
+    /* FIXED: Vertical Dates Positioning (Separated from table margin) */
+    .vertical-date-front {
       position: absolute;
-      left: 11px;
-      top: 41px;
-      height: 139px;
-      max-width: 12px;
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      font-size: 7px;
-      line-height: 1.1;
+      left: 6px;
+      bottom: 25px;
+      transform: rotate(-90deg);
+      transform-origin: left bottom;
+      font-size: 7.5px;
+      font-weight: bold;
+      color: #000;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    .vertical-date-back {
+      position: absolute;
+      left: 6px;
+      bottom: 25px;
+      transform: rotate(-90deg);
+      transform-origin: left bottom;
+      font-size: 7.5px;
       font-weight: bold;
       color: #000;
       white-space: nowrap;
@@ -208,31 +218,23 @@
       line-height: 1.2;
     }
 
-    /* Fixed back-side viewport: rows scale inside the PVC edges. */
-    .agri-table-area {
-      position: absolute;
-      top: 83px;
-      left: 38px;
-      right: 15px;
-      bottom: 12px;
-      overflow: hidden;
-    }
+    /* FIXED: Table Position (Clear Gap from Vertical Date Text) */
     .agri-table-overlay {
-      width: 100%;
-      table-layout: fixed;
+      position: absolute;
+      top: 80px;
+      left: 38px; /* Safe Margin from left edge */
+      width: 270px;
       border-collapse: collapse;
       font-size: 7.5px;
       text-align: center;
       background: transparent;
-      transform-origin: top left;
     }
     .agri-table-overlay td {
       padding: 3px 1px;
       font-weight: bold;
       color: #000;
       border: 0.5px solid #ccc;
-      background: #fff;
-      overflow-wrap: anywhere;
+      background: #fff; /* Ensures clear visibility */
     }
 
     .print-btn {
@@ -252,6 +254,71 @@
       .cards-wrapper, .cards-wrapper * { visibility: visible; }
       .cards-wrapper { position: absolute; left: 0; top: 0; }
       .editor-form, .print-btn, h1 { display: none; }
+    }
+
+    /* Exact PVC preview and print bounds; artwork and overlaid data are separate. */
+    .pvc-card { width:323.5px; height:204px; flex-shrink:0; padding:0;
+      box-shadow:0 4px 10px rgba(0,0,0,.12); border-radius:9px; isolation:isolate; }
+    .pvc-card::before { content:""; position:absolute; pointer-events:none;
+      inset:0; background:radial-gradient(ellipse at 12% 104%,rgba(156,183,101,.27),transparent 37%),
+      radial-gradient(ellipse at 99% 91%,rgba(183,195,114,.24),transparent 33%); z-index:0; }
+    .template-heading { position:absolute; left:3px;right:3px;top:3px;height:31px;
+      border-bottom:1px solid #333;display:flex;align-items:center;justify-content:center;
+      gap:7px;z-index:1;pointer-events:none; }
+    .template-logo { position:absolute;left:7px;top:8px;font-size:11px;font-weight:bold;color:#23672f;letter-spacing:-.5px; }
+    .template-logo em {font-style:normal;color:#ef7a1a}
+    .heading-text {text-align:center;line-height:1.05;padding-left:17px;}
+    .heading-text .mr {display:block;font-size:9px;font-weight:700;color:#cf4e36;}
+    .heading-text .en {display:block;font-family:Georgia,serif;font-size:15px;font-weight:bold;color:#214c2c;}
+    .seal {position:absolute;right:11px;top:0;width:30px;height:30px;border-radius:50%;background:#090909;}
+    /* Dates rotate around their own center so they cannot protrude through card edges. */
+    .vertical-date-front,.vertical-date-back { left:2px;top:59px;bottom:auto;
+      width:117px;height:10px;line-height:10px;transform-origin:top left;
+      transform:translate(1px,117px) rotate(-90deg);text-align:center;
+      font-size:7px;font-weight:700;z-index:3;white-space:nowrap; }
+    .photo-box {top:46px;left:16px;width:71px;height:88px;border:1px solid #75869b;
+      background:#e4ebf2;border-radius:4px;z-index:1;}
+    .photo-box img {object-fit:cover;}
+    .info-details-front {top:45px;left:94px;right:90px;font-size:8.2px;
+      line-height:1.46;z-index:2;overflow-wrap:anywhere;}
+    .info-details-front .info-line {display:grid;grid-template-columns:51px minmax(0,1fr);gap:2px;}
+    .info-details-front .info-line .key {font-weight:750;}
+    .qr-box {top:89px;right:18px;width:70px;height:70px;padding:2px;z-index:2;border:1px solid #999;}
+    .qr-box img,.qr-box canvas {display:block;width:64px!important;height:64px!important;}
+    .farmer-id-disp {bottom:19px;left:11px;width:calc(100% - 22px);
+      font-family:Georgia,serif;font-size:14px;line-height:1.2;white-space:nowrap;
+      text-align:center;z-index:2;}
+    .card-foot-rule {position:absolute;bottom:18px;left:4px;right:4px;
+      border-top:2px solid #c78229;z-index:1;}
+    .disp-address-text {left:19px;right:17px;top:37px;line-height:1.18;
+      font-family:Georgia,serif;font-size:8.5px;z-index:2;max-height:28px;overflow:hidden;}
+    .agri-table-overlay {left:16px;top:65px;width:292px;max-width:calc(100% - 31px);
+      table-layout:fixed; border-collapse:collapse; font-size:7.6px;z-index:2;
+      background:white;}
+    .agri-table-overlay th {background:#aad0c0;color:#13503d;
+      border:.6px solid #333;padding:4px 1px;font-weight:bold;white-space:nowrap;}
+    .agri-table-overlay td {background:rgba(255,255,255,.96);border:.6px solid #444;
+      padding:3px 1px;overflow-wrap:anywhere;line-height:1.1;}
+    .agri-table-overlay th:nth-child(1){width:11%}
+    .agri-table-overlay th:nth-child(2){width:16%}
+    .agri-table-overlay th:nth-child(3){width:17%}
+    .agri-table-overlay th:nth-child(4){width:20%}
+    .agri-table-overlay th:nth-child(5){width:12%}
+    .agri-table-overlay th:nth-child(6){width:12%}
+    .agri-table-overlay th:nth-child(7){width:12%}
+    .table-notice {display:none;font-size:12px;color:#9b251e;font-weight:bold;max-width:380px;}
+    .photo-empty {position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      font-weight:700;font-size:11px;color:#77879d;}
+    #displayPhoto:not([src]) {display:none;}
+    .photo-box:has(#displayPhoto[src]) .photo-empty {display:none;}
+    @page {size:auto;margin:8mm;}
+    @media print {
+      body{padding:0;background:white!important;}
+      .cards-wrapper{position:static!important;display:flex;gap:6mm;}
+      .pvc-card {width:85.6mm;height:54mm;border:.15mm solid #9c9c9c;
+        border-radius:2mm;box-shadow:none;break-inside:avoid;
+        print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+      .cards-wrapper{position:absolute!important;left:0;top:0;}
     }
   </style>
 </head>
@@ -334,21 +401,22 @@
     <div class="cards-wrapper">
       <!-- FRONT CARD -->
       <div class="pvc-card" id="frontCard">
+        <div class="template-heading" aria-hidden="true"><div class="template-logo">Agri<em>Stack</em></div><div class="heading-text"><span class="mr">शेतकरी वैयक्तिक ओळखपत्र</span><span class="en">Farmer Personal Identity Card</span></div><div class="seal"></div></div>
         <!-- Vertical Approval Date -->
         <div class="vertical-date-front" id="dispApprovalDate">Approval Date : 07/10/2026</div>
 
         <div class="photo-box">
-          <img id="displayPhoto" src="https://via.placeholder.com/70x86?text=PHOTO" alt="Photo">
+          <span class="photo-empty">PHOTO</span><img id="displayPhoto" alt="Photo">
         </div>
         
         <div class="info-details-front">
-          <div><span id="dispNameMr">रमेश बाबुराव पाटील</span></div>
-          <div><span id="dispNameEn">Ramesh Baburao Patil</span></div>
-          <div><span id="dispGender">Male</span></div>
-          <div><span id="dispDob">15/08/1980</span></div>
-          <div><span id="dispArea">Rural</span></div>
-          <div><span id="dispAadhaar">[Aadhaar Redacted]</span></div>
-          <div><span id="dispMobile">9876543210</span></div>
+          <div class="info-line"><span class="key">नाव</span><span id="dispNameMr">रमेश बाबुराव पाटील</span></div>
+          <div class="info-line"><span class="key">Name</span><span id="dispNameEn">Ramesh Baburao Patil</span></div>
+          <div class="info-line"><span class="key">Gender</span><span id="dispGender">Male</span></div>
+          <div class="info-line"><span class="key">DOB</span><span id="dispDob">15/08/1980</span></div>
+          <div class="info-line"><span class="key">Area</span><span id="dispArea">Rural</span></div>
+          <div class="info-line"><span class="key">Aadhaar</span><span id="dispAadhaar">[Aadhaar Redacted]</span></div>
+          <div class="info-line"><span class="key">Mobile</span><span id="dispMobile">9876543210</span></div>
         </div>
 
         <!-- Dynamic QR Code -->
@@ -361,6 +429,7 @@
 
       <!-- BACK CARD -->
       <div class="pvc-card" id="backCard">
+        <div class="template-heading" aria-hidden="true"><div class="template-logo">Agri<em>Stack</em></div><div class="heading-text"><span class="mr">शेतीची माहिती</span><span class="en">Information about agriculture</span></div><div class="seal"></div></div>
         <!-- Vertical Download Date -->
         <div class="vertical-date-back" id="dispDownloadDate">Download Date : 07/10/2026</div>
 
@@ -369,15 +438,16 @@
         </div>
 
         <!-- Dynamic Agriculture Table -->
-        <div class="agri-table-area" id="agriTableArea">
-          <table class="agri-table-overlay" id="agriTableDisplay">
-            <!-- Rows render dynamically -->
-          </table>
-        </div>
+        <table class="agri-table-overlay" id="agriTableDisplay">
+          <thead><tr><th>State</th><th>District</th><th>Sub Dist</th><th>Village</th><th>S.No</th><th>Khata</th><th>Area (Ha)</th></tr></thead>
+          <tbody id="agriTableBody"></tbody>
+        </table>
+        <div class="card-foot-rule" aria-hidden="true"></div>
       </div>
     </div>
   </div>
 
+  <p class="table-notice" id="tableNotice" role="alert"></p>
   <button class="print-btn" onclick="window.print()">Print Cards</button>
 
   <script>
@@ -403,8 +473,8 @@
       qrcodeContainer.innerHTML = "";
       new QRCode(qrcodeContainer, {
         text: qrData,
-        width: 60,
-        height: 60,
+        width: 64,
+        height: 64,
         correctLevel: QRCode.CorrectLevel.M
       });
     }
@@ -424,6 +494,7 @@
     // Dynamic Land Table Rows
     function addLandRow() {
       const container = document.getElementById('landRowsContainer');
+      if (container.querySelectorAll('.land-row-input').length >= 5) { alert('PVC कार्ड में अधिकतम 5 पंक्तियाँ फिट होंगी।'); return; }
       const rowDiv = document.createElement('div');
       rowDiv.className = 'land-row-input';
       rowDiv.innerHTML = `
@@ -446,33 +517,22 @@
       renderLandTable();
     }
 
-    function fitLandTable() {
-      const area = document.getElementById('agriTableArea');
-      const table = document.getElementById('agriTableDisplay');
-      table.style.transform = 'none';
-      table.style.width = '100%';
-      const naturalHeight = table.offsetHeight;
-      if (!naturalHeight) return;
-      const scale = Math.min(1, area.clientHeight / naturalHeight);
-      // Resize width inversely so that the scaled table still fills the back panel.
-      table.style.width = `${100 / scale}%`;
-      table.style.transform = `scale(${scale})`;
-    }
-
     function renderLandTable() {
-      const rows = document.querySelectorAll('#landRowsContainer .land-row-input');
-      const tableDisplay = document.getElementById('agriTableDisplay');
+      const container = document.getElementById('landRowsContainer');
+      const rows = container.getElementsByClassName('land-row-input');
+      const tableDisplay = document.getElementById('agriTableBody');
       tableDisplay.replaceChildren();
-      rows.forEach(row => {
+
+      Array.from(rows).forEach(row => {
+        const inputs = row.getElementsByTagName('input');
         const tr = document.createElement('tr');
-        row.querySelectorAll('input').forEach(input => {
+        Array.from(inputs).forEach(input => {
           const td = document.createElement('td');
           td.textContent = input.value;
           tr.appendChild(td);
         });
         tableDisplay.appendChild(tr);
       });
-      fitLandTable();
     }
 
     function bindRowEvents() {
@@ -504,12 +564,19 @@
       elem.addEventListener('input', bindSync);
     });
 
+    // Prevent cropped row content or layout spill in print. 
+    window.addEventListener('beforeprint', () => {
+      const t = document.getElementById('agriTableDisplay');
+      const card = document.getElementById('backCard');
+      if (t.getBoundingClientRect().bottom > card.getBoundingClientRect().bottom - 12) {
+        alert('Agriculture table is too long for the PVC card. Please shorten entries or remove rows before printing.');
+      }
+    });
+
     // Initial Trigger
     bindSync();
     bindRowEvents();
     renderLandTable();
-    window.addEventListener('resize', fitLandTable);
-    window.addEventListener('beforeprint', fitLandTable);
   </script>
 </body>
 </html>
