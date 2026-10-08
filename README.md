@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="mr">
 <head>
   <meta charset="UTF-8">
@@ -405,7 +404,7 @@
         flex-direction:row!important;
         justify-content:center!important;
         align-items:flex-start!important;
-        gap:8mm!important;
+        gap:2mm!important; /* Small fold allowance: front/back remain 85.6mm wide. */
         margin:0 auto!important;
         padding:0!important;
         width:100%!important;
@@ -618,6 +617,28 @@
       overflow:visible!important;
     }
 
+    /* Blank data-entry form: placeholders are hints only and never printed. */
+    .editor-form .name-fields {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;}
+    .editor-form .name-fields input {min-width:0;padding:6px 5px;font-size:10.5px;}
+    .editor-form select {width:100%;min-height:30px;padding:5px 9px;border:1px solid #9da8a2;
+      border-radius:4px;background-color:#fff;color:#111;font-size:12px;cursor:pointer;}
+    .editor-form select:focus-visible {outline:2px solid #2a673b;outline-offset:1px;}
+    .editor-form input[readonly] {background:#f2f5ef;color:#344c3b;cursor:not-allowed;font-weight:600;}
+    /* Back footer: fixed bilingual notice and a very small bottom-right SkilloPrint mark. */
+    #backCard .card-foot-rule {bottom:27px;}
+    #backCard .personal-use-note {bottom:10px;}
+    #backCard .skilloprint-brand {
+      position:absolute;z-index:4;right:6px;bottom:2px;
+      display:flex;align-items:center;gap:1px;height:8px;
+      font:700 6.5px/1 'Segoe UI',Tahoma,sans-serif;
+      color:#2a6439;letter-spacing:-.12px;white-space:nowrap;
+      pointer-events:none;
+    }
+    #backCard .skilloprint-brand .brand-print {color:#bd7223;}
+    #backCard .skilloprint-brand .brand-leaf {width:7px;height:7px;display:block;}
+    @media print {
+      #backCard .skilloprint-brand {print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important;}
+    }
   </style>
 </head>
 <body>
@@ -648,7 +669,7 @@
       <h2>Front Side Details</h2>
       <div class="form-group">
         <label>Approval Date (Vertical Text):</label>
-        <input type="text" id="inputApprovalDate" value="Approval Date : 07/10/2026">
+        <input type="text" id="inputApprovalDate" value="" placeholder="DD/MM/YYYY" autocomplete="off">
       </div>
       <div class="form-group">
         <label>Upload Photo:</label>
@@ -656,58 +677,66 @@
       </div>
       <div class="form-group">
         <label>Name (Marathi):</label>
-        <input type="text" id="inputNameMr" value="रमेश बाबुराव पाटील">
+        <input type="text" id="inputNameMr" value="" placeholder="पहिले नाव, मधले नाव, आडनाव" autocomplete="off">
       </div>
       <div class="form-group">
         <label>Name (English):</label>
-        <input type="text" id="inputNameEn" value="Ramesh Baburao Patil">
+        <div class="name-fields">
+          <input type="text" id="inputFirstName" placeholder="First name" aria-label="First name" autocomplete="off">
+          <input type="text" id="inputMiddleName" placeholder="Middle name" aria-label="Middle name" autocomplete="off">
+          <input type="text" id="inputLastName" placeholder="Last name" aria-label="Last name" autocomplete="off">
+        </div>
       </div>
       <div class="form-group">
-        <label>Gender:</label>
-        <input type="text" id="inputGender" value="Male">
+        <label for="inputGender">Gender:</label>
+        <select id="inputGender" aria-label="Gender">
+          <option value="" selected disabled>Select gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
       </div>
       <div class="form-group">
         <label>DOB:</label>
-        <input type="text" id="inputDob" value="15/08/1980">
+        <input type="text" id="inputDob" value="" placeholder="DD/MM/YYYY" autocomplete="off">
       </div>
       <div class="form-group">
         <label>Area:</label>
-        <input type="text" id="inputArea" value="Rural">
+        <input type="text" id="inputArea" value="" placeholder="Rural / Urban" autocomplete="off">
       </div>
       <div class="form-group">
         <label>Aadhaar No:</label>
-        <input type="text" id="inputAadhaar" value="[Aadhaar Redacted]">
+        <input type="text" id="inputAadhaar" value="" placeholder="Enter Aadhaar number" autocomplete="off">
       </div>
       <div class="form-group">
         <label>Mobile No:</label>
-        <input type="text" id="inputMobile" value="9876543210">
+        <input type="text" id="inputMobile" value="" placeholder="Enter mobile number" autocomplete="off">
       </div>
       <div class="form-group">
         <label>Farmer ID:</label>
-        <input type="text" id="inputFarmerId" value="9876 5432 1010">
+        <input type="text" id="inputFarmerId" value="" placeholder="Enter Farmer ID" autocomplete="off">
       </div>
 
       <h2>Back Side Details</h2>
       <div class="form-group">
-        <label>Download Date (Vertical Text):</label>
-        <input type="text" id="inputDownloadDate" value="Download Date : 07/10/2026">
+        <label for="inputDownloadDate">Download Date (Auto — Print / Save PDF):</label>
+        <input type="text" id="inputDownloadDate" readonly aria-readonly="true" title="Automatically set to the local date when printing or saving the card as PDF">
       </div>
       <div class="form-group">
         <label>Address:</label>
-        <input type="text" id="inputAddress" value="A/P. Pachora, Tal. Pachora, Dist. Jalgaon - 424201">
+        <input type="text" id="inputAddress" value="" placeholder="Enter complete address" autocomplete="off">
       </div>
 
       <h2>Agriculture Table (Add Multiple Rows)</h2>
       <div id="landRowsContainer">
         <!-- Default Initial Row -->
         <div class="land-row-input">
-          <input type="text" placeholder="State" value="MH" style="width: 35px;">
-          <input type="text" placeholder="District" value="Jalgaon" style="width: 55px;">
-          <input type="text" placeholder="Sub Dist" value="Pachora" style="width: 55px;">
-          <input type="text" placeholder="Village" value="Pachora" style="width: 55px;">
-          <input type="text" placeholder="S.No" value="102" style="width: 35px;">
-          <input type="text" placeholder="Khata" value="4" style="width: 35px;">
-          <input type="text" placeholder="Area" value="0.500" style="width: 45px;">
+          <input type="text" placeholder="State" value="" style="width: 35px;">
+          <input type="text" placeholder="District" value="" style="width: 55px;">
+          <input type="text" placeholder="Sub Dist" value="" style="width: 55px;">
+          <input type="text" placeholder="Village" value="" style="width: 55px;">
+          <input type="text" placeholder="S.No" value="" style="width: 35px;">
+          <input type="text" placeholder="Khata" value="" style="width: 35px;">
+          <input type="text" placeholder="Area" value="" style="width: 45px;">
         </div>
       </div>
       <button class="btn-action" onclick="addLandRow()">+ Add Row</button>
@@ -720,27 +749,27 @@
         <svg class="agri-card-art" viewBox="0 0 323.5 204" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><use href="#art-wheat"></use></svg>
         <div class="template-heading" aria-hidden="true"><div class="template-logo"><svg class="wheat-mark" viewBox="0 0 19 27" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.5 25V4" fill="none" stroke="#547b31" stroke-width="1.5" stroke-linecap="round"/><g fill="#e3b44e" stroke="#b78b2f" stroke-width=".35"><ellipse cx="5.5" cy="8.8" rx="2.5" ry="4" transform="rotate(-33 5.5 8.8)"/><ellipse cx="13.5" cy="8.8" rx="2.5" ry="4" transform="rotate(33 13.5 8.8)"/><ellipse cx="5.1" cy="14.3" rx="2.55" ry="4.2" transform="rotate(-38 5.1 14.3)"/><ellipse cx="13.9" cy="14.3" rx="2.55" ry="4.2" transform="rotate(38 13.9 14.3)"/><ellipse cx="9.5" cy="3.8" rx="2.2" ry="4"/></g><g fill="#79a84c"><path d="M9 23C4.7 23.3 3 19 2.4 17.3c4-.1 6.7 1.7 6.6 5.7Z"/><path d="M10.2 21c3.6-4.8 5.3-5.1 7-5.1-.6 3.7-2.9 6.1-7 6.5Z"/></g></svg><span class="logo-type"><span class="logo-agri">Agri</span><span class="logo-stack">Stack</span></span></div><div class="heading-text"><span class="mr">शेतकरी वैयक्तिक ओळखपत्र</span><span class="en">Farmer Personal Identity Card</span></div><div class="seal"></div></div>
         <!-- Vertical Approval Date -->
-        <div class="vertical-date-front" id="dispApprovalDate">Approval Date : 07/10/2026</div>
+        <div class="vertical-date-front" id="dispApprovalDate"></div>
 
         <div class="photo-box">
           <span class="photo-empty">PHOTO</span><img id="displayPhoto" alt="Photo">
         </div>
         
         <div class="info-details-front">
-          <div class="info-line"><span class="key">नाव</span><span id="dispNameMr">रमेश बाबुराव पाटील</span></div>
-          <div class="info-line"><span class="key">Name</span><span id="dispNameEn">Ramesh Baburao Patil</span></div>
-          <div class="info-line"><span class="key">Gender</span><span id="dispGender">Male</span></div>
-          <div class="info-line"><span class="key">DOB</span><span id="dispDob">15/08/1980</span></div>
-          <div class="info-line"><span class="key">Area</span><span id="dispArea">Rural</span></div>
-          <div class="info-line"><span class="key">Aadhaar</span><span id="dispAadhaar">[Aadhaar Redacted]</span></div>
-          <div class="info-line"><span class="key">Mobile</span><span id="dispMobile">9876543210</span></div>
+          <div class="info-line"><span class="key">नाव</span><span id="dispNameMr"></span></div>
+          <div class="info-line"><span class="key">Name</span><span id="dispNameEn"></span></div>
+          <div class="info-line"><span class="key">Gender</span><span id="dispGender"></span></div>
+          <div class="info-line"><span class="key">DOB</span><span id="dispDob"></span></div>
+          <div class="info-line"><span class="key">Area</span><span id="dispArea"></span></div>
+          <div class="info-line"><span class="key">Aadhaar</span><span id="dispAadhaar"></span></div>
+          <div class="info-line"><span class="key">Mobile</span><span id="dispMobile"></span></div>
         </div>
 
         <!-- Dynamic QR Code -->
         <div class="qr-box" id="qrcode"></div>
 
         <div class="farmer-id-disp">
-          Farmer ID : <span id="dispFarmerId">9876 5432 1010</span>
+          Farmer ID : <span id="dispFarmerId"></span>
         </div>
       </div>
 
@@ -749,10 +778,10 @@
         <svg class="agri-card-art" viewBox="0 0 323.5 204" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><use href="#art-wheat"></use></svg>
         <div class="template-heading" aria-hidden="true"><div class="template-logo"><svg class="wheat-mark" viewBox="0 0 19 27" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.5 25V4" fill="none" stroke="#547b31" stroke-width="1.5" stroke-linecap="round"/><g fill="#e3b44e" stroke="#b78b2f" stroke-width=".35"><ellipse cx="5.5" cy="8.8" rx="2.5" ry="4" transform="rotate(-33 5.5 8.8)"/><ellipse cx="13.5" cy="8.8" rx="2.5" ry="4" transform="rotate(33 13.5 8.8)"/><ellipse cx="5.1" cy="14.3" rx="2.55" ry="4.2" transform="rotate(-38 5.1 14.3)"/><ellipse cx="13.9" cy="14.3" rx="2.55" ry="4.2" transform="rotate(38 13.9 14.3)"/><ellipse cx="9.5" cy="3.8" rx="2.2" ry="4"/></g><g fill="#79a84c"><path d="M9 23C4.7 23.3 3 19 2.4 17.3c4-.1 6.7 1.7 6.6 5.7Z"/><path d="M10.2 21c3.6-4.8 5.3-5.1 7-5.1-.6 3.7-2.9 6.1-7 6.5Z"/></g></svg><span class="logo-type"><span class="logo-agri">Agri</span><span class="logo-stack">Stack</span></span></div><div class="heading-text"><span class="mr">शेतीची माहिती</span><span class="en">Information about agriculture</span></div><div class="seal"></div></div>
         <!-- Vertical Download Date -->
-        <div class="vertical-date-back" id="dispDownloadDate">Download Date : 07/10/2026</div>
+        <div class="vertical-date-back" id="dispDownloadDate"></div>
 
         <div class="disp-address-text">
-          <b>Address:</b> <span id="dispAddress">A/P. Pachora, Tal. Pachora, Dist. Jalgaon - 424201</span>
+          <b>Address:</b> <span id="dispAddress"></span>
         </div>
 
         <!-- Dynamic Agriculture Table -->
@@ -764,6 +793,10 @@
         <div class="personal-use-note" aria-label="Card for personal use only, not government issued">
           <span>* टीप: हे कार्ड केवळ वैयक्तिक वापरासाठी आहे; हे सरकारी कार्ड नाही.</span>
           <span>This card is for personal use not for Govt. issue card.</span>
+        </div>
+        <div class="skilloprint-brand" aria-label="SkilloPrint.com">
+          <svg class="brand-leaf" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 10C2.6 5.1 5.1 2.8 10.5 1.5c.1 5.6-2.4 8.3-8.5 8.5Z" fill="#6c9441"/><path d="M2 10 8.2 3.8" stroke="#e1edc8" stroke-width=".9" fill="none"/></svg>
+          <span>Skillo<span class="brand-print">Print</span>.com</span>
         </div>
       </div>
     </div>
@@ -824,7 +857,10 @@
     // Form Elements
     const inputApprovalDate = document.getElementById('inputApprovalDate');
     const inputNameMr = document.getElementById('inputNameMr');
-    const inputNameEn = document.getElementById('inputNameEn');
+    const inputFirstName = document.getElementById('inputFirstName');
+    const inputMiddleName = document.getElementById('inputMiddleName');
+    const inputLastName = document.getElementById('inputLastName');
+    const fullEnglishName = () => [inputFirstName.value, inputMiddleName.value, inputLastName.value].map(n => n.trim()).filter(Boolean).join(' ');
     const inputGender = document.getElementById('inputGender');
     const inputDob = document.getElementById('inputDob');
     const inputArea = document.getElementById('inputArea');
@@ -837,12 +873,22 @@
     const inputAddress = document.getElementById('inputAddress');
     const qrcodeContainer = document.getElementById('qrcode');
 
-    // Dynamic QR Code Generator
+    // Generate a QR only from data actually entered (no demo details).
     function updateQRCode() {
-      const qrData = `Farmer ID: ${inputFarmerId.value}\nName: ${inputNameEn.value}\nDOB: ${inputDob.value}\nGender: ${inputGender.value}\nMobile: ${inputMobile.value}\nAddress: ${inputAddress.value}`;
-      qrcodeContainer.innerHTML = "";
+      const values = [
+        ['Farmer ID', inputFarmerId.value.trim()],
+        ['Name', fullEnglishName()],
+        ['DOB', inputDob.value.trim()],
+        ['Gender', inputGender.value],
+        ['Mobile', inputMobile.value.trim()],
+        ['Address', inputAddress.value.trim()]
+      ];
+      qrcodeContainer.replaceChildren();
+      const supplied = values.filter(([,value]) => Boolean(value));
+      qrcodeContainer.style.visibility = supplied.length ? 'visible' : 'hidden';
+      if (!supplied.length || typeof QRCode === 'undefined') return;
       new QRCode(qrcodeContainer, {
-        text: qrData,
+        text: supplied.map(([label,value]) => `${label}: ${value}`).join('\n'),
         width: 64,
         height: 64,
         correctLevel: QRCode.CorrectLevel.M
@@ -868,13 +914,13 @@
       const rowDiv = document.createElement('div');
       rowDiv.className = 'land-row-input';
       rowDiv.innerHTML = `
-        <input type="text" placeholder="State" value="MH" style="width: 35px;">
-        <input type="text" placeholder="District" value="Jalgaon" style="width: 55px;">
-        <input type="text" placeholder="Sub Dist" value="Pachora" style="width: 55px;">
-        <input type="text" placeholder="Village" value="Pachora" style="width: 55px;">
-        <input type="text" placeholder="S.No" value="102" style="width: 35px;">
-        <input type="text" placeholder="Khata" value="4" style="width: 35px;">
-        <input type="text" placeholder="Area" value="0.500" style="width: 45px;">
+        <input type="text" placeholder="State" value="" style="width: 35px;">
+        <input type="text" placeholder="District" value="" style="width: 55px;">
+        <input type="text" placeholder="Sub Dist" value="" style="width: 55px;">
+        <input type="text" placeholder="Village" value="" style="width: 55px;">
+        <input type="text" placeholder="S.No" value="" style="width: 35px;">
+        <input type="text" placeholder="Khata" value="" style="width: 35px;">
+        <input type="text" placeholder="Area" value="" style="width: 45px;">
         <button class="btn-action btn-remove" onclick="removeRow(this)">X</button>
       `;
       container.appendChild(rowDiv);
@@ -936,35 +982,56 @@
       });
     }
 
+    // Keep the date read-only and refresh from the browser's local calendar,
+    // including immediately before the physical/PDF print occurs.
+    function syncDownloadDate() {
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2,'0');
+      const mm = String(now.getMonth()+1).padStart(2,'0');
+      const yyyy = now.getFullYear();
+      const stamped = `Download Date : ${dd}/${mm}/${yyyy}`;
+      inputDownloadDate.value = stamped;
+      document.getElementById('dispDownloadDate').textContent = stamped;
+    }
+
     // Static Fields Sync
     function bindSync() {
-      document.getElementById('dispApprovalDate').innerText = inputApprovalDate.value;
+      const enteredApproval = inputApprovalDate.value.trim();
+      document.getElementById('dispApprovalDate').innerText = enteredApproval ?
+        (enteredApproval.toLowerCase().startsWith('approval date') ? enteredApproval : 'Approval Date : ' + enteredApproval) : '';
       document.getElementById('dispNameMr').innerText = inputNameMr.value;
-      document.getElementById('dispNameEn').innerText = inputNameEn.value;
+      document.getElementById('dispNameEn').innerText = fullEnglishName();
       document.getElementById('dispGender').innerText = inputGender.value;
       document.getElementById('dispDob').innerText = inputDob.value;
       document.getElementById('dispArea').innerText = inputArea.value;
       document.getElementById('dispAadhaar').innerText = inputAadhaar.value;
       document.getElementById('dispMobile').innerText = inputMobile.value;
       document.getElementById('dispFarmerId').innerText = inputFarmerId.value;
-      document.getElementById('dispDownloadDate').innerText = inputDownloadDate.value;
+      syncDownloadDate();
       document.getElementById('dispAddress').innerText = inputAddress.value;
       // Reposition table on every address edit (no fixed table top).
       requestAnimationFrame(fitLandTable);
       updateQRCode();
     }
 
-    [inputApprovalDate, inputNameMr, inputNameEn, inputGender, inputDob, inputArea, inputAadhaar, inputMobile, inputFarmerId, inputDownloadDate, inputAddress].forEach(elem => {
+    [inputApprovalDate, inputNameMr, inputFirstName, inputMiddleName, inputLastName,
+      inputGender, inputDob, inputArea, inputAadhaar, inputMobile, inputFarmerId, inputAddress].forEach(elem => {
       elem.addEventListener('input', bindSync);
+      elem.addEventListener('change', bindSync);
     });
+    window.addEventListener('focus', syncDownloadDate);
+    window.addEventListener('pageshow', syncDownloadDate);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) syncDownloadDate(); });
 
     function printCards() {
+      syncDownloadDate();
       if (!fitLandTable()) return;
       window.print();
     }
 
     // Prevent cropped row content or layout spill in print. 
     window.addEventListener('beforeprint', () => {
+      syncDownloadDate();
       const t = document.getElementById('agriTableDisplay');
       const card = document.getElementById('backCard');
       if (!fitLandTable()) {
