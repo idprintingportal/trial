@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AgriStack Identity Card Live Editor (Dynamic Rows & Dates)</title>
+  <title>AgriStack Card Generator (Centered & Fixed Layout)</title>
   <!-- QRCode.js Library CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
@@ -38,7 +38,7 @@
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       width: 420px;
-      max-height: 85vh;
+      max-height: 88vh;
       overflow-y: auto;
     }
     .editor-form h2 {
@@ -125,14 +125,14 @@
       background-image: url('back-bg.png'); 
     }
 
-    /* Vertical Lines styling for Dates */
+    /* FIXED: Vertical Dates Alignment (No Cropping) */
     .vertical-date-front {
       position: absolute;
-      left: 6px;
-      top: 50px;
+      left: 14px;
+      bottom: 25px;
       transform: rotate(-90deg);
-      transform-origin: left top;
-      font-size: 8px;
+      transform-origin: left bottom;
+      font-size: 7.5px;
       font-weight: bold;
       color: #000;
       white-space: nowrap;
@@ -140,11 +140,11 @@
 
     .vertical-date-back {
       position: absolute;
-      left: 6px;
-      top: 60px;
+      left: 14px;
+      bottom: 25px;
       transform: rotate(-90deg);
-      transform-origin: left top;
-      font-size: 8px;
+      transform-origin: left bottom;
+      font-size: 7.5px;
       font-weight: bold;
       color: #000;
       white-space: nowrap;
@@ -154,9 +154,9 @@
     .photo-box {
       position: absolute;
       top: 45px;
-      left: 22px;
-      width: 72px;
-      height: 88px;
+      left: 28px;
+      width: 70px;
+      height: 86px;
       border: 1px solid #90a4ae;
       border-radius: 4px;
       background: #e0e0e0;
@@ -171,7 +171,7 @@
     .info-details-front {
       position: absolute;
       top: 45px;
-      left: 102px;
+      left: 106px;
       font-size: 9px;
       line-height: 1.35;
       color: #000;
@@ -181,9 +181,9 @@
     .qr-box {
       position: absolute;
       top: 80px;
-      right: 14px;
-      width: 62px;
-      height: 62px;
+      right: 18px;
+      width: 60px;
+      height: 60px;
       background: #fff;
       padding: 2px;
       border: 1px solid #ccc;
@@ -195,7 +195,7 @@
 
     .farmer-id-disp {
       position: absolute;
-      bottom: 28px;
+      bottom: 26px;
       left: 0;
       width: 100%;
       text-align: center;
@@ -204,23 +204,25 @@
       color: #1b5e20;
     }
 
-    /* Overlay positioning for Back Card */
+    /* FIXED: Overlay positioning for Back Card (Centered Alignment) */
     .disp-address-text {
       position: absolute;
       top: 42px;
-      left: 20px;
-      right: 20px;
+      left: 26px;
+      right: 18px;
       font-size: 8px;
       font-weight: 600;
       color: #000;
       line-height: 1.2;
     }
 
+    /* Table Perfectly Centered inside Card */
     .agri-table-overlay {
       position: absolute;
       top: 80px;
-      left: 18px;
-      width: 290px;
+      left: 50%;
+      transform: translateX(-50%); /* Keeps Table Perfectly Centered */
+      width: 272px; /* Perfect width matching grid columns */
       border-collapse: collapse;
       font-size: 7.5px;
       text-align: center;
@@ -254,7 +256,7 @@
 </head>
 <body>
 
-  <h1>AgriStack Card Generator (Full Custom)</h1>
+  <h1>AgriStack Card Generator (Centered Layout)</h1>
 
   <div class="main-container">
     <!-- Live Form Controls -->
@@ -313,7 +315,7 @@
 
       <h2>Agriculture Table (Add Multiple Rows)</h2>
       <div id="landRowsContainer">
-        <!-- Default Initial Row -->
+        <!-- Default Initial Rows -->
         <div class="land-row-input">
           <input type="text" placeholder="State" value="MH" style="width: 35px;">
           <input type="text" placeholder="District" value="Jalgaon" style="width: 55px;">
@@ -335,7 +337,7 @@
         <div class="vertical-date-front" id="dispApprovalDate">Approval Date : 07/10/2026</div>
 
         <div class="photo-box">
-          <img id="displayPhoto" src="https://via.placeholder.com/75x90?text=PHOTO" alt="Photo">
+          <img id="displayPhoto" src="https://via.placeholder.com/70x86?text=PHOTO" alt="Photo">
         </div>
         
         <div class="info-details-front">
@@ -365,9 +367,9 @@
           <b>Address:</b> <span id="dispAddress">A/P. Pachora, Tal. Pachora, Dist. Jalgaon - 424201</span>
         </div>
 
-        <!-- Dynamic Agriculture Table -->
+        <!-- Dynamic Agriculture Table (Centered Layout) -->
         <table class="agri-table-overlay" id="agriTableDisplay">
-          <!-- Rows will render dynamically from Javascript -->
+          <!-- Rows render dynamically -->
         </table>
       </div>
     </div>
@@ -376,7 +378,7 @@
   <button class="print-btn" onclick="window.print()">Print Cards</button>
 
   <script>
-    // Front Form Sync
+    // Front Form Elements
     const inputApprovalDate = document.getElementById('inputApprovalDate');
     const inputNameMr = document.getElementById('inputNameMr');
     const inputNameEn = document.getElementById('inputNameEn');
@@ -388,7 +390,7 @@
     const inputFarmerId = document.getElementById('inputFarmerId');
     const inputPhoto = document.getElementById('inputPhoto');
 
-    // Back Form Sync
+    // Back Form Elements
     const inputDownloadDate = document.getElementById('inputDownloadDate');
     const inputAddress = document.getElementById('inputAddress');
     const qrcodeContainer = document.getElementById('qrcode');
@@ -399,13 +401,13 @@
       qrcodeContainer.innerHTML = "";
       new QRCode(qrcodeContainer, {
         text: qrData,
-        width: 62,
-        height: 62,
+        width: 60,
+        height: 60,
         correctLevel: QRCode.CorrectLevel.M
       });
     }
 
-    // Photo Upload Handler
+    // Photo Reader
     inputPhoto.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
@@ -417,7 +419,7 @@
       }
     });
 
-    // Dynamic Land Table Rows Logic
+    // Dynamic Land Rows Logic
     function addLandRow() {
       const container = document.getElementById('landRowsContainer');
       const rowDiv = document.createElement('div');
@@ -452,13 +454,13 @@
         const inputs = row.getElementsByTagName('input');
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td style="width: 38px;">${inputs[0].value}</td>
-          <td style="width: 48px;">${inputs[1].value}</td>
-          <td style="width: 48px;">${inputs[2].value}</td>
-          <td style="width: 48px;">${inputs[3].value}</td>
-          <td style="width: 32px;">${inputs[4].value}</td>
-          <td style="width: 32px;">${inputs[5].value}</td>
-          <td style="width: 44px;">${inputs[6].value}</td>
+          <td style="width: 36px;">${inputs[0].value}</td>
+          <td style="width: 46px;">${inputs[1].value}</td>
+          <td style="width: 46px;">${inputs[2].value}</td>
+          <td style="width: 46px;">${inputs[3].value}</td>
+          <td style="width: 30px;">${inputs[4].value}</td>
+          <td style="width: 28px;">${inputs[5].value}</td>
+          <td style="width: 40px;">${inputs[6].value}</td>
         `;
         tableDisplay.appendChild(tr);
       });
@@ -472,7 +474,7 @@
       });
     }
 
-    // Synchronize All Static Text
+    // Static Fields Sync
     function bindSync() {
       document.getElementById('dispApprovalDate').innerText = inputApprovalDate.value;
       document.getElementById('dispNameMr').innerText = inputNameMr.value;
@@ -489,12 +491,12 @@
       updateQRCode();
     }
 
-    // Event Listeners for Static Fields
+    // Attach Listeners
     [inputApprovalDate, inputNameMr, inputNameEn, inputGender, inputDob, inputArea, inputAadhaar, inputMobile, inputFarmerId, inputDownloadDate, inputAddress].forEach(elem => {
       elem.addEventListener('input', bindSync);
     });
 
-    // Initial Execution
+    // Initial Trigger
     bindSync();
     bindRowEvents();
     renderLandTable();
