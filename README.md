@@ -2,7 +2,7 @@
 <html lang="mr">
 <head>
   <meta charset="UTF-8">
-  <title>AgriStack PVC Card Generator — Template Aligned</title>
+  <title>AgriStack PVC Card Generator — Premium Farm Design</title>
   <!-- QRCode.js Library CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
@@ -321,15 +321,43 @@
       .cards-wrapper{position:absolute!important;left:0;top:0;}
     }
 
-    /* v3: Dedicated title lanes prevent the logo, title and seal from colliding. */
+    /* Centered title lanes with a farmer-themed AgriStack corner logo. */
     .template-heading {left:4px;right:4px;top:4px;height:32px;display:block;}
-    .template-logo {position:absolute;left:6px;top:10px;width:45px;font-size:10px;white-space:nowrap;z-index:2;}
-    .heading-text {position:absolute;left:52px;right:10px;top:1px;height:27px;
-      padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-      overflow:hidden;white-space:nowrap;}
+    .template-logo {
+      position:absolute;left:9px;top:9px;width:74px;height:18px;z-index:2;
+      display:flex;align-items:flex-end;gap:1px;white-space:nowrap;
+      font-weight:800;letter-spacing:-.45px;
+    }
+    .template-logo .logo-word.agri {color:#2f6d35;font-size:10px;line-height:1;}
+    .template-logo .logo-word.stack {color:#ef7a1a;font-size:10px;line-height:1;}
+    .template-logo .logo-sprout {
+      position:relative;display:inline-block;width:11px;height:16px;flex:0 0 11px;
+      margin:0 1px 0 -1px;
+    }
+    .template-logo .logo-sprout::before {
+      content:"";position:absolute;left:5px;bottom:0;width:1.6px;height:15px;
+      background:linear-gradient(to top,#4f7d2b,#89b94d);border-radius:2px;
+      box-shadow:0 0 0 .2px rgba(0,0,0,.12);
+    }
+    .template-logo .logo-sprout::after {
+      content:"";position:absolute;left:0;top:1px;width:11px;height:13px;
+      background:
+        radial-gradient(ellipse at 33% 27%, #9ac54a 0 34%, transparent 36%),
+        radial-gradient(ellipse at 73% 42%, #76a93b 0 34%, transparent 36%),
+        radial-gradient(ellipse at 28% 70%, #6fa144 0 32%, transparent 35%),
+        radial-gradient(ellipse at 77% 76%, #8ebf54 0 32%, transparent 35%);
+      transform:rotate(-8deg);
+      opacity:.98;
+    }
+    .heading-text {
+      position:absolute;left:50%;top:1px;transform:translateX(-50%);
+      width:210px;max-width:calc(100% - 112px);height:27px;padding:0;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      overflow:hidden;white-space:nowrap;text-align:center;
+    }
     .heading-text .mr {font-size:9px;line-height:12px;white-space:nowrap;}
-    .heading-text .en {font-size:12.1px;line-height:14px;letter-spacing:-.35px;white-space:nowrap;}
-    #backCard .heading-text .en {font-size:11.4px;letter-spacing:-.4px;}
+    .heading-text .en {font-size:12.1px;line-height:14px;letter-spacing:-.25px;white-space:nowrap;}
+    #backCard .heading-text .en {font-size:11.4px;letter-spacing:-.2px;}
     .seal {display:none !important; background:transparent !important; border:none !important; box-shadow:none !important;}
     .disp-address-text {left:19px;right:15px;top:40px;min-height:19px;
       max-height:26px;overflow-wrap:anywhere;overflow:hidden;}
@@ -348,8 +376,8 @@
     .agri-table-overlay th:nth-child(5){width:12%}
     .agri-table-overlay th:nth-child(6){width:11%}
     .agri-table-overlay th:nth-child(7){width:13%}
-    .card-foot-rule {bottom:17px;left:4px;right:4px;}
-    .farmer-id-disp {bottom:18px;font-size:13px;}
+    .card-foot-rule {bottom:17px;left:12px;right:12px;}
+    .farmer-id-disp {bottom:18px;font-size:13px;left:12px;width:calc(100% - 24px);text-align:center;}
     .vertical-date-front,.vertical-date-back {left:3px;}
     /* Print an A4 sheet with two CR80-size cards and no nested scrolling. */
     @page {size:A4 portrait;margin:10mm;}
@@ -399,11 +427,172 @@
     @media print {
       #backCard .agri-table-overlay {overflow:visible!important;}
     }
+
+    /* Permanent bilingual personal-use notice; stays centered inside the PVC back-card footer. */
+    #backCard .card-foot-rule { bottom:24px; left:12px; right:12px; }
+    #backCard .personal-use-note {
+      position:absolute; left:50%; transform:translateX(-50%); width:286px; max-width:calc(100% - 24px);
+      bottom:4px; z-index:3; color:#c53022; font-size:5.9px; font-weight:700;
+      line-height:1.18; text-align:center; white-space:normal; pointer-events:none;
+    }
+    #backCard .personal-use-note span { display:block; }
+    @media print {
+      #backCard .personal-use-note { color:#c53022!important; print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+    }
+
+    /* Premium farm identity: crisp vector logo and quiet wheat artwork. */
+    .pvc-card { background-color:#fcfcf4; }
+    #frontCard { background-image:linear-gradient(158deg,#fff 0%,#fffef8 57%,#eff3de 100%); }
+    #backCard { background-image:linear-gradient(158deg,#fff 0%,#fdfdf8 54%,#edf3dc 100%); }
+    .agri-card-art { position:absolute;inset:0;width:100%;height:100%;z-index:0;
+      pointer-events:none;opacity:.26; }
+    .template-heading { left:6px;right:6px;top:4px;height:33px;
+      border-bottom:1px solid #456647; }
+    .template-logo { left:3px;top:3px;width:49px;height:25px;display:flex;align-items:center;
+      gap:0;padding:0;white-space:nowrap;z-index:3; }
+    .template-logo .wheat-mark {display:block;flex:0 0 15px;width:15px;height:23px;}
+    .template-logo .logo-type {display:flex;align-items:baseline;letter-spacing:-.55px;
+      font-family:Georgia,'Segoe UI',serif;font-size:9.4px;font-weight:900;line-height:1;}
+    .template-logo .logo-agri {color:#2b6a35;}
+    .template-logo .logo-stack {color:#d57b23;}
+    .heading-text {position:absolute;left:50%;transform:translateX(-50%);top:1px;
+      width:212px;max-width:none;height:27px;overflow:visible;padding:0;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;white-space:nowrap;}
+    .heading-text .mr { font-size:9.2px;line-height:12px; }
+    .heading-text .en {font-size:12.1px;line-height:14px;letter-spacing:-.25px;}
+    #backCard .heading-text .en {font-size:11.3px;letter-spacing:-.2px;}
+    .farmer-id-disp {left:12px;right:12px;width:auto;text-align:center;
+      bottom:18px;font-variant-numeric:tabular-nums;}
+    #backCard .card-foot-rule {left:12px;right:12px;border-top-color:#bf8c40;}
+    #backCard .personal-use-note {left:50%;transform:translateX(-50%);
+      width:calc(100% - 26px);max-width:297px;text-align:center;}
+    @media print {
+      .agri-card-art {opacity:.26!important;print-color-adjust:exact!important;
+        -webkit-print-color-adjust:exact!important;}
+      #frontCard,#backCard {print-color-adjust:exact!important;
+        -webkit-print-color-adjust:exact!important;}
+    }
+
+    /* TEN MATCHED FRONT + BACK AGRICULTURE THEMES: same variant always on both. */
+    .cards-wrapper {
+      --theme-top:#fffef7;--theme-bottom:#eef3d9;--theme-accent:#d0a24f;
+      --theme-table:#a6d0c0;--theme-ink:#1e5a36;--theme-sub:#c44c39;
+      --theme-rule:#c58e35;--theme-art:#718d42;
+    }
+    .cards-wrapper[data-theme="wheat"] { --theme-top:#fffef7; --theme-bottom:#eef3d9;
+      --theme-accent:#d0a24f; --theme-table:#a6d0c0; --theme-ink:#1e5a36;
+      --theme-sub:#c44c39; --theme-rule:#c58e35; --theme-art:#718d42; }
+    .cards-wrapper[data-theme="paddy"] { --theme-top:#ffffff; --theme-bottom:#e0f1df;
+      --theme-accent:#6c9b63; --theme-table:#a8d6bd; --theme-ink:#235c3c;
+      --theme-sub:#ba633c; --theme-rule:#71a366; --theme-art:#5c9567; }
+    .cards-wrapper[data-theme="cotton"] { --theme-top:#fffefa; --theme-bottom:#f0edf1;
+      --theme-accent:#ac8aa1; --theme-table:#b7d2c6; --theme-ink:#53415e;
+      --theme-sub:#b45b63; --theme-rule:#947d9a; --theme-art:#ba98b5; }
+    .cards-wrapper[data-theme="sugarcane"] { --theme-top:#fefff9; --theme-bottom:#e0edd5;
+      --theme-accent:#6a8f50; --theme-table:#b9d8a7; --theme-ink:#355a2a;
+      --theme-sub:#ae7038; --theme-rule:#7b9e45; --theme-art:#719d5c; }
+    .cards-wrapper[data-theme="sunflower"] { --theme-top:#fffef8; --theme-bottom:#fff1d6;
+      --theme-accent:#d99c38; --theme-table:#d6d2a6; --theme-ink:#645322;
+      --theme-sub:#be6539; --theme-rule:#e0a23f; --theme-art:#ca9830; }
+    .cards-wrapper[data-theme="orchard"] { --theme-top:#fffefa; --theme-bottom:#ebf4d8;
+      --theme-accent:#7a9c4c; --theme-table:#b5d3a5; --theme-ink:#405e2b;
+      --theme-sub:#a9583e; --theme-rule:#c49c43; --theme-art:#8dac5b; }
+    .cards-wrapper[data-theme="terrace"] { --theme-top:#fefffc; --theme-bottom:#e8f3eb;
+      --theme-accent:#6b9d86; --theme-table:#accfc3; --theme-ink:#2a6153;
+      --theme-sub:#bb674d; --theme-rule:#689e85; --theme-art:#68a997; }
+    .cards-wrapper[data-theme="organic"] { --theme-top:#fffefd; --theme-bottom:#eaf4e5;
+      --theme-accent:#78a179; --theme-table:#c2d8b1; --theme-ink:#29583e;
+      --theme-sub:#aa6352; --theme-rule:#81a75c; --theme-art:#81ae83; }
+    .cards-wrapper[data-theme="monsoon"] { --theme-top:#fdfeff; --theme-bottom:#e6f0f6;
+      --theme-accent:#7b9cad; --theme-table:#b6d2d7; --theme-ink:#2d5568;
+      --theme-sub:#be6651; --theme-rule:#729cac; --theme-art:#779db8; }
+    .cards-wrapper[data-theme="millet"] { --theme-top:#fffefa; --theme-bottom:#f3ecd8;
+      --theme-accent:#ad8c5e; --theme-table:#d2c19d; --theme-ink:#684e34;
+      --theme-sub:#b85f36; --theme-rule:#bc9655; --theme-art:#ab9568; }
+
+    .cards-wrapper[data-theme] .pvc-card {
+      background-color:var(--theme-top)!important;
+      background-image:linear-gradient(164deg,var(--theme-top) 0%,#fffefa 46%,var(--theme-bottom) 100%)!important;
+    }
+    .cards-wrapper[data-theme] .pvc-card::before {
+      background:radial-gradient(ellipse at 10% 97%,var(--theme-bottom),transparent 41%),
+      radial-gradient(ellipse at 92% 100%,var(--theme-bottom),transparent 45%);
+      opacity:.9;
+    }
+    .cards-wrapper[data-theme] .agri-card-art {color:var(--theme-art);opacity:.18!important;}
+    .cards-wrapper[data-theme] .template-heading {border-bottom-color:var(--theme-ink);}
+    .cards-wrapper[data-theme] .heading-text .en {color:var(--theme-ink);}
+    .cards-wrapper[data-theme] .heading-text .mr {color:var(--theme-sub);}
+    .cards-wrapper[data-theme] .logo-agri {color:var(--theme-ink);}
+    .cards-wrapper[data-theme] .logo-stack {color:var(--theme-rule);}
+    .cards-wrapper[data-theme] .farmer-id-disp {color:var(--theme-ink);}
+    .cards-wrapper[data-theme] .agri-table-overlay th {background:var(--theme-table)!important;color:var(--theme-ink)!important;}
+    .cards-wrapper[data-theme] .card-foot-rule {border-top-color:var(--theme-rule)!important;}
+    .cards-wrapper[data-theme] .photo-box {border-color:var(--theme-art);}
+    .cards-wrapper[data-theme] .pvc-card .personal-use-note {color:#bb392c!important;}
+    /* Logo stays in its own left lane while titles remain mathematically centered. */
+    .cards-wrapper[data-theme] .template-logo {left:2px;top:3px;width:51px;}
+    .cards-wrapper[data-theme] .heading-text {
+      left:50%;transform:translateX(-50%);width:220px;max-width:none;
+      overflow:hidden;text-align:center;
+    }
+    .cards-wrapper[data-theme] .heading-text .en {font-size:11.8px;letter-spacing:-.42px;}
+    .cards-wrapper[data-theme] #backCard .heading-text .en {font-size:11.25px;letter-spacing:-.42px;}
+    .cards-wrapper[data-theme] .info-details-front .info-line {grid-template-columns:42px minmax(0,1fr);gap:2px;}
+    .cards-wrapper[data-theme] .farmer-id-disp {left:12px;right:12px;width:auto;text-align:center;}
+    .cards-wrapper[data-theme] #backCard .personal-use-note {left:50%;transform:translateX(-50%);text-align:center;}
+    .theme-picker {background:white;border:1px solid #d1dacd;border-radius:10px;padding:13px;
+      margin-bottom:14px;max-width:1220px;width:100%;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+    .theme-picker h2{font-size:15px;color:#245a35;margin-bottom:4px;text-align:center;}
+    .theme-picker p{font-size:11px;color:#60726b;text-align:center;margin-bottom:11px;}
+    .theme-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;}
+    .theme-option{border:1px solid #cbd5ca;border-radius:8px;padding:7px 6px;
+      display:flex;align-items:center;gap:8px;min-width:0;min-height:48px;
+      cursor:pointer;background:#fff;color:#233b2d;text-align:left;font-size:11px;font-weight:700;
+      transition:border-color .15s,box-shadow .15s;}
+    .theme-option .theme-thumb{width:46px;height:30px;flex:none;border-radius:5px;
+      border:1px solid #bec9bd;position:relative;overflow:hidden;
+      background:linear-gradient(155deg,var(--swatch-top) 15%,var(--swatch-bottom) 100%);}
+    .theme-option .theme-thumb::before{content:"";position:absolute;inset:3px 3px auto 3px;height:3px;
+      border-bottom:1px solid var(--swatch-ink);opacity:.8;}
+    .theme-option .theme-thumb::after{content:"";position:absolute;bottom:-5px;right:-1px;
+      width:27px;height:19px;border:2px solid var(--swatch-art);opacity:.42;
+      border-radius:90% 0 0 0;transform:rotate(-12deg);}
+    .theme-option:is(:hover,:focus-visible){outline:0;border-color:#49794e;box-shadow:0 0 0 2px rgba(65,119,69,.14);}
+    .theme-option[aria-pressed="true"]{border:2px solid #246b3e;padding:6px 5px;box-shadow:0 0 0 2px rgba(45,117,61,.15);}
+    .theme-option .theme-title{line-height:1.25;min-width:0;}
+    @media (max-width:950px){.theme-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+    @media (max-width:590px){.theme-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+    @media print {
+      .theme-picker{display:none!important;}
+      .cards-wrapper[data-theme] .pvc-card,.cards-wrapper[data-theme] .agri-table-overlay th{
+        -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+    }
+
   </style>
 </head>
 <body>
 
+  <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;pointer-events:none;overflow:hidden"><defs>
+<symbol id="art-wheat" viewBox="0 0 323.5 204"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M0 198 Q76 180 162 198 T324 191 M0 204 Q86 189 172 204 T324 197 M10 204 C15 177 23 148 39 130 M23 204 C32 175 45 151 52 140 M314 204 C303 175 302 150 282 137"/></g><g fill="currentColor"><ellipse cx="34" cy="141" rx="3.3" ry="8" transform="rotate(27 34 141)"/><ellipse cx="26" cy="148" rx="3.3" ry="7" transform="rotate(-34 26 148)"/><ellipse cx="39" cy="154" rx="3.3" ry="7" transform="rotate(35 39 154)"/><ellipse cx="20" cy="161" rx="3.3" ry="7" transform="rotate(-40 20 161)"/><ellipse cx="285" cy="142" rx="3.4" ry="8" transform="rotate(-25 285 142)"/><ellipse cx="295" cy="153" rx="3.2" ry="7" transform="rotate(35 295 153)"/><ellipse cx="278" cy="155" rx="3.2" ry="7" transform="rotate(-30 278 155)"/></g></symbol>
+<symbol id="art-paddy" viewBox="0 0 323.5 204"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 165 Q79 141 163 162 T324 157 M0 177 Q83 150 169 175 T324 171 M0 189 Q80 167 175 189 T324 181 M0 201 Q87 179 172 202 T324 193"/><path d="M21 203 Q28 176 29 149 M31 204Q42 173 43 146 M295 204Q281 166 289 143 M305 204 Q302 174 301 147"/></g><g fill="currentColor"><path d="M29 156Q14 148 17 135Q29 139 29 156 M29 165Q44 149 48 137Q31 140 29 165 M42 156Q51 142 59 137Q53 153 42 156 M287 151Q270 140 269 130Q285 131 287 151 M296 159Q306 144 314 143Q312 158 296 159"/></g></symbol>
+<symbol id="art-cotton" viewBox="0 0 323.5 204"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 204 Q35 166 45 154 M318 204Q297 163 285 156 M35 196Q25 176 18 176 M47 184Q63 174 69 164 M288 185Q277 168 263 167"/></g><g fill="currentColor" opacity=".75"><circle cx="44" cy="150" r="9"/><circle cx="34" cy="149" r="7"/><circle cx="52" cy="144" r="7"/><circle cx="44" cy="138" r="7"/><circle cx="283" cy="146" r="9"/><circle cx="274" cy="144" r="7"/><circle cx="291" cy="140" r="7"/><circle cx="282" cy="133" r="7"/></g><g fill="currentColor"><path d="M27 190Q11 180 9 173Q22 173 27 190 M51 182Q61 165 70 162Q70 175 51 182 M296 183Q315 172 318 164Q304 165 296 183"/></g></symbol>
+<symbol id="art-sugarcane" viewBox="0 0 323.5 204"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M18 204 L23 145 M31 204 L38 133 M49 204 L54 145 M288 204L281 139 M302 204L305 151 M317 204 L313 144"/></g><g fill="currentColor"><path d="M23 163Q1 133 0 116Q24 130 23 163 M38 150Q65 115 76 109Q60 142 38 150 M36 175Q8 164 0 151Q23 152 36 175 M54 165Q72 151 84 147Q72 166 54 165 M281 160Q266 136 246 127Q259 152 281 160 M304 177Q320 153 324 144Q312 151 304 177 M286 181Q265 161 254 161Q269 181 286 181"/></g></symbol>
+<symbol id="art-sunflower" viewBox="0 0 323.5 204"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 204Q32 169 41 157 M309 204 Q300 166 291 156 M41 189 Q12 169 5 173 M291 180Q316 167 324 168"/></g><g fill="currentColor"><circle cx="42" cy="151" r="7"/><circle cx="291" cy="152" r="7"/><g transform="translate(42 151)"><ellipse cx="0" cy="-14" rx="4" ry="7"/><ellipse cx="0" cy="14" rx="4" ry="7"/><ellipse cx="-14" cy="0" rx="7" ry="4"/><ellipse cx="14" cy="0" rx="7" ry="4"/><ellipse cx="10" cy="-10" rx="4" ry="6" transform="rotate(45 10 -10)"/><ellipse cx="-10" cy="10" rx="4" ry="6" transform="rotate(45 -10 10)"/><ellipse cx="10" cy="10" rx="4" ry="6" transform="rotate(-45 10 10)"/><ellipse cx="-10" cy="-10" rx="4" ry="6" transform="rotate(-45 -10 -10)"/></g><g transform="translate(291 152)"><ellipse cx="0" cy="-14" rx="4" ry="7"/><ellipse cx="0" cy="14" rx="4" ry="7"/><ellipse cx="-14" cy="0" rx="7" ry="4"/><ellipse cx="14" cy="0" rx="7" ry="4"/><ellipse cx="10" cy="-10" rx="5" ry="6"/><ellipse cx="-10" cy="10" rx="5" ry="6"/><ellipse cx="10" cy="10" rx="5" ry="6"/><ellipse cx="-10" cy="-10" rx="5" ry="6"/></g></g></symbol>
+<symbol id="art-orchard" viewBox="0 0 323.5 204"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M36 204V168 M291 204V164 M36 176L22 157 M36 179L52 161 M291 174L274 152 M291 172L309 154 M0 199Q85 178 170 197 T324 194"/></g><g fill="currentColor" opacity=".75"><circle cx="22" cy="161" r="13"/><circle cx="39" cy="149" r="16"/><circle cx="54" cy="163" r="13"/><circle cx="277" cy="152" r="13"/><circle cx="295" cy="147" r="16"/><circle cx="309" cy="160" r="13"/></g><g fill="#caa355"><ellipse cx="24" cy="165" rx="3" ry="4"/><ellipse cx="45" cy="159" rx="3" ry="4"/><ellipse cx="293" cy="163" rx="3" ry="4"/></g></symbol>
+<symbol id="art-terrace" viewBox="0 0 323.5 204"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 138Q54 128 96 139T185 139T324 136 M0 151Q60 142 119 151T238 150T324 149 M0 165 Q69 153 142 165T278 161T324 164 M0 178 Q75 166 164 176T324 177 M0 193Q79 182 172 191T324 187 M0 204Q90 193 185 203T324 198"/></g><g fill="currentColor" opacity=".5"><path d="M0 177Q80 164 162 178T324 174V187Q240 173 154 190T0 189Z"/><path d="M0 197Q99 182 178 199T324 192V204H0Z"/></g></symbol>
+<symbol id="art-organic" viewBox="0 0 323.5 204"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 204 Q18 164 56 131 M2 194Q33 178 64 180 M320 204 Q298 168 262 129 M324 188Q301 178 261 182 M0 201Q80 184 164 199T324 194"/></g><g fill="currentColor"><path d="M19 166 Q-1 159 3 146Q21 149 19 166 M32 153Q25 132 37 125Q44 139 32 153 M44 143Q46 121 62 119Q60 136 44 143 M27 177Q43 157 59 158Q52 175 27 177 M298 166Q317 154 320 140Q300 143 298 166 M283 148Q278 133 263 124Q266 142 283 148 M289 184Q268 162 251 165Q265 183 289 184"/></g></symbol>
+<symbol id="art-monsoon" viewBox="0 0 323.5 204"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M0 177Q71 156 149 176T324 175 M0 192Q76 171 163 190T324 188 M0 204Q97 187 171 205T324 199"/><path d="M18 203L21 174 M39 204L37 178 M296 204L297 175 M309 204L310 177"/></g><g fill="currentColor"><path d="M17 169Q4 162 0 149Q18 153 17 169 M39 174Q49 156 60 153Q52 172 39 174 M294 167Q274 151 267 143Q288 147 294 167"/><path d="M237 140l-2 7 M252 138l-2 7 M268 141l-2 7 M281 137l-2 7" stroke="currentColor" stroke-width="1.8"/></g><g fill="currentColor" opacity=".5"><path d="M230 126Q237 116 245 122Q258 109 268 120Q283 114 290 128Q287 136 278 135H240Q232 135 230 126Z"/></g></symbol>
+<symbol id="art-millet" viewBox="0 0 323.5 204"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M14 204 Q22 159 26 127 M35 204 Q44 168 49 136 M310 204Q303 158 290 127 M287 204Q283 170 267 139 M0 202Q89 181 175 199T324 192"/></g><g fill="currentColor"><ellipse cx="26" cy="135" rx="6" ry="16" transform="rotate(11 26 135)"/><ellipse cx="49" cy="145" rx="5" ry="14" transform="rotate(19 49 145)"/><ellipse cx="289" cy="137" rx="6" ry="16" transform="rotate(-15 289 137)"/><ellipse cx="268" cy="148" rx="5" ry="13" transform="rotate(-20 268 148)"/><path d="M21 183Q4 171 1 162Q19 166 21 183 M36 180Q51 163 61 162Q54 179 36 180 M301 183Q322 169 324 157Q308 169 301 183"/></g></symbol>
+</defs></svg>
   <h1>AgriStack Card Generator</h1>
+
+  <section class="theme-picker" aria-labelledby="themePickerHeading">
+    <h2 id="themePickerHeading">Agriculture Card Templates · 10 Matching Sets</h2>
+    <p>Choose one design — Front and Back update together (प्रिंट में भी वही डिज़ाइन रहेगा).</p>
+    <div class="theme-grid" id="themeGrid" role="group" aria-label="Select agriculture card design"></div>
+  </section>
 
   <div class="main-container">
     <!-- Live Form Controls -->
@@ -477,10 +666,11 @@
     </div>
 
     <!-- PVC Card Previews -->
-    <div class="cards-wrapper">
+    <div class="cards-wrapper" data-theme="wheat">
       <!-- FRONT CARD -->
       <div class="pvc-card" id="frontCard">
-        <div class="template-heading" aria-hidden="true"><div class="template-logo">Agri<em>Stack</em></div><div class="heading-text"><span class="mr">शेतकरी वैयक्तिक ओळखपत्र</span><span class="en">Farmer Personal Identity Card</span></div><div class="seal"></div></div>
+        <svg class="agri-card-art" viewBox="0 0 323.5 204" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><use href="#art-wheat"></use></svg>
+        <div class="template-heading" aria-hidden="true"><div class="template-logo"><svg class="wheat-mark" viewBox="0 0 19 27" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.5 25V4" fill="none" stroke="#547b31" stroke-width="1.5" stroke-linecap="round"/><g fill="#e3b44e" stroke="#b78b2f" stroke-width=".35"><ellipse cx="5.5" cy="8.8" rx="2.5" ry="4" transform="rotate(-33 5.5 8.8)"/><ellipse cx="13.5" cy="8.8" rx="2.5" ry="4" transform="rotate(33 13.5 8.8)"/><ellipse cx="5.1" cy="14.3" rx="2.55" ry="4.2" transform="rotate(-38 5.1 14.3)"/><ellipse cx="13.9" cy="14.3" rx="2.55" ry="4.2" transform="rotate(38 13.9 14.3)"/><ellipse cx="9.5" cy="3.8" rx="2.2" ry="4"/></g><g fill="#79a84c"><path d="M9 23C4.7 23.3 3 19 2.4 17.3c4-.1 6.7 1.7 6.6 5.7Z"/><path d="M10.2 21c3.6-4.8 5.3-5.1 7-5.1-.6 3.7-2.9 6.1-7 6.5Z"/></g></svg><span class="logo-type"><span class="logo-agri">Agri</span><span class="logo-stack">Stack</span></span></div><div class="heading-text"><span class="mr">शेतकरी वैयक्तिक ओळखपत्र</span><span class="en">Farmer Personal Identity Card</span></div><div class="seal"></div></div>
         <!-- Vertical Approval Date -->
         <div class="vertical-date-front" id="dispApprovalDate">Approval Date : 07/10/2026</div>
 
@@ -508,7 +698,8 @@
 
       <!-- BACK CARD -->
       <div class="pvc-card" id="backCard">
-        <div class="template-heading" aria-hidden="true"><div class="template-logo">Agri<em>Stack</em></div><div class="heading-text"><span class="mr">शेतीची माहिती</span><span class="en">Information about agriculture</span></div><div class="seal"></div></div>
+        <svg class="agri-card-art" viewBox="0 0 323.5 204" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><use href="#art-wheat"></use></svg>
+        <div class="template-heading" aria-hidden="true"><div class="template-logo"><svg class="wheat-mark" viewBox="0 0 19 27" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.5 25V4" fill="none" stroke="#547b31" stroke-width="1.5" stroke-linecap="round"/><g fill="#e3b44e" stroke="#b78b2f" stroke-width=".35"><ellipse cx="5.5" cy="8.8" rx="2.5" ry="4" transform="rotate(-33 5.5 8.8)"/><ellipse cx="13.5" cy="8.8" rx="2.5" ry="4" transform="rotate(33 13.5 8.8)"/><ellipse cx="5.1" cy="14.3" rx="2.55" ry="4.2" transform="rotate(-38 5.1 14.3)"/><ellipse cx="13.9" cy="14.3" rx="2.55" ry="4.2" transform="rotate(38 13.9 14.3)"/><ellipse cx="9.5" cy="3.8" rx="2.2" ry="4"/></g><g fill="#79a84c"><path d="M9 23C4.7 23.3 3 19 2.4 17.3c4-.1 6.7 1.7 6.6 5.7Z"/><path d="M10.2 21c3.6-4.8 5.3-5.1 7-5.1-.6 3.7-2.9 6.1-7 6.5Z"/></g></svg><span class="logo-type"><span class="logo-agri">Agri</span><span class="logo-stack">Stack</span></span></div><div class="heading-text"><span class="mr">शेतीची माहिती</span><span class="en">Information about agriculture</span></div><div class="seal"></div></div>
         <!-- Vertical Download Date -->
         <div class="vertical-date-back" id="dispDownloadDate">Download Date : 07/10/2026</div>
 
@@ -522,6 +713,10 @@
           <tbody id="agriTableBody"></tbody>
         </table>
         <div class="card-foot-rule" aria-hidden="true"></div>
+        <div class="personal-use-note" aria-label="Card for personal use only, not government issued">
+          <span>* टीप: हे कार्ड केवळ वैयक्तिक वापरासाठी आहे; हे सरकारी कार्ड नाही.</span>
+          <span>This card is for personal use not for Govt. issue card.</span>
+        </div>
       </div>
     </div>
   </div>
@@ -530,6 +725,54 @@
   <button class="print-btn" onclick="printCards()">Print Cards</button>
 
   <script>
+
+    // Each of the 10 agriculture templates is a matched FRONT + BACK pair.
+    const AGRI_THEMES = [
+      {id:'wheat',label:'01 · Golden Wheat',top:'#fffef7',bottom:'#eef3d9',ink:'#1e5a36',art:'#718d42'},
+      {id:'paddy',label:'02 · Emerald Paddy',top:'#ffffff',bottom:'#e0f1df',ink:'#235c3c',art:'#5c9567'},
+      {id:'cotton',label:'03 · Cotton Blossom',top:'#fffefa',bottom:'#f0edf1',ink:'#53415e',art:'#ba98b5'},
+      {id:'sugarcane',label:'04 · Sugarcane Green',top:'#fefff9',bottom:'#e0edd5',ink:'#355a2a',art:'#719d5c'},
+      {id:'sunflower',label:'05 · Sunflower Gold',top:'#fffef8',bottom:'#fff1d6',ink:'#645322',art:'#ca9830'},
+      {id:'orchard',label:'06 · Mango Orchard',top:'#fffefa',bottom:'#ebf4d8',ink:'#405e2b',art:'#8dac5b'},
+      {id:'terrace',label:'07 · Terrace Fields',top:'#fefffc',bottom:'#e8f3eb',ink:'#2a6153',art:'#68a997'},
+      {id:'organic',label:'08 · Organic Leaves',top:'#fffefd',bottom:'#eaf4e5',ink:'#29583e',art:'#81ae83'},
+      {id:'monsoon',label:'09 · Monsoon Crops',top:'#fdfeff',bottom:'#e6f0f6',ink:'#2d5568',art:'#779db8'},
+      {id:'millet',label:'10 · Millet Heritage',top:'#fffefa',bottom:'#f3ecd8',ink:'#684e34',art:'#ab9568'},
+    ];
+    const cardsWrapper = document.querySelector('.cards-wrapper');
+    const themeGrid = document.getElementById('themeGrid');
+    AGRI_THEMES.forEach(theme => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'theme-option';
+      button.dataset.theme = theme.id;
+      button.setAttribute('aria-pressed', theme.id === 'wheat' ? 'true' : 'false');
+      const swatch = document.createElement('span');
+      swatch.className = 'theme-thumb';
+      swatch.setAttribute('aria-hidden','true');
+      swatch.style.setProperty('--swatch-top',theme.top);
+      swatch.style.setProperty('--swatch-bottom',theme.bottom);
+      swatch.style.setProperty('--swatch-ink',theme.ink);
+      swatch.style.setProperty('--swatch-art',theme.art);
+      const title = document.createElement('span');
+      title.className = 'theme-title';
+      title.textContent = theme.label;
+      button.append(swatch,title);
+      button.addEventListener('click',() => selectAgriTheme(theme.id));
+      themeGrid.append(button);
+    });
+    function selectAgriTheme(id) {
+      const theme = AGRI_THEMES.find(t => t.id === id);
+      if (!theme) return;
+      cardsWrapper.dataset.theme = theme.id;
+      document.querySelectorAll('.agri-card-art use').forEach(use => {
+        use.setAttribute('href', '#art-' + theme.id);
+      });
+      themeGrid.querySelectorAll('.theme-option').forEach(button => {
+        button.setAttribute('aria-pressed',button.dataset.theme === theme.id ? 'true' : 'false');
+      });
+    }
+
     // Form Elements
     const inputApprovalDate = document.getElementById('inputApprovalDate');
     const inputNameMr = document.getElementById('inputNameMr');
@@ -620,8 +863,8 @@
       const card = document.getElementById('backCard');
       const notice = document.getElementById('tableNotice');
       table.classList.remove('table-compact','table-dense');
-      // Keep 18 px of safe space above the bottom rule, never add a scrollbar.
-      const availableBottom = card.getBoundingClientRect().top + 178;
+      // Reserve footer space for the permanent bilingual note; never add a scrollbar.
+      const availableBottom = card.getBoundingClientRect().top + 175;
       if (table.getBoundingClientRect().bottom > availableBottom) table.classList.add('table-compact');
       if (table.getBoundingClientRect().bottom > availableBottom) table.classList.add('table-dense');
       const fits = table.getBoundingClientRect().bottom <= availableBottom;
