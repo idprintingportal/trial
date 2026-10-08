@@ -379,20 +379,50 @@
     .card-foot-rule {bottom:17px;left:12px;right:12px;}
     .farmer-id-disp {bottom:18px;font-size:13px;left:12px;width:calc(100% - 24px);text-align:center;}
     .vertical-date-front,.vertical-date-back {left:3px;}
-    /* Print an A4 sheet with two CR80-size cards and no nested scrolling. */
+    /* Print an A4 sheet with two CR80-size cards side-by-side (front left, back right). */
     @page {size:A4 portrait;margin:10mm;}
     @media print {
-      html,body {width:auto!important;height:auto!important;margin:0!important;padding:0!important;
-        background:white!important;overflow:visible!important;}
+      html,body {
+        width:auto!important;height:auto!important;margin:0!important;padding:0!important;
+        background:white!important;overflow:visible!important;
+      }
       body * {visibility:visible!important;}
       h1,.editor-form,.print-btn,.table-notice {display:none!important;}
-      .main-container {display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;}
-      .cards-wrapper {position:static!important;display:flex!important;flex-direction:column!important;
-        gap:6mm!important;margin:0!important;padding:0!important;width:85.6mm!important;overflow:visible!important;}
-      .pvc-card {width:85.6mm!important;height:54mm!important;flex:none!important;
-        border:.15mm solid #aaa!important;box-shadow:none!important;break-inside:avoid!important;
-        page-break-inside:avoid!important;overflow:hidden!important;
-        print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important;}
+      body {
+        display:block!important;
+        background:white!important;
+      }
+      .main-container {
+        display:block!important;
+        width:100%!important;
+        max-width:none!important;
+        margin:0 auto!important;
+        padding:0!important;
+      }
+      .cards-wrapper {
+        position:static!important;
+        display:flex!important;
+        flex-direction:row!important;
+        justify-content:center!important;
+        align-items:flex-start!important;
+        gap:8mm!important;
+        margin:0 auto!important;
+        padding:0!important;
+        width:100%!important;
+        overflow:visible!important;
+      }
+      .pvc-card {
+        width:85.6mm!important;
+        height:54mm!important;
+        flex:0 0 85.6mm!important;
+        border:.15mm solid #aaa!important;
+        box-shadow:none!important;
+        break-inside:avoid!important;
+        page-break-inside:avoid!important;
+        overflow:hidden!important;
+        print-color-adjust:exact!important;
+        -webkit-print-color-adjust:exact!important;
+      }
       .agri-table-overlay {overflow:visible!important;}
     }
 
@@ -568,6 +598,24 @@
       .theme-picker{display:none!important;}
       .cards-wrapper[data-theme] .pvc-card,.cards-wrapper[data-theme] .agri-table-overlay th{
         -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+    }
+
+    /* Back side: address expands naturally. Table is positioned immediately after
+       its measured text height; no fixed height, clipped lines, or horizontal slider. */
+    #backCard .disp-address-text {
+      height:auto!important;
+      min-height:0!important;
+      max-height:none!important;
+      overflow:visible!important;
+      white-space:normal!important;
+      overflow-wrap:anywhere;
+      word-break:normal;
+    }
+    #backCard .agri-table-overlay {
+      /* The actual top is set from the address element's rendered height. */
+      margin:0!important;
+      min-width:0!important;
+      overflow:visible!important;
     }
 
   </style>
@@ -861,14 +909,22 @@
     function fitLandTable() {
       const table = document.getElementById('agriTableDisplay');
       const card = document.getElementById('backCard');
+      const address = card.querySelector('.disp-address-text');
       const notice = document.getElementById('tableNotice');
-      table.classList.remove('table-compact','table-dense');
-      // Reserve footer space for the permanent bilingual note; never add a scrollbar.
+      // Follow the actual address height, including any newly wrapped lines.
+      // Since both elements are positioned relative to the same card, their
+      // top offsets remain reliable in both preview and A4 print layouts.
+      const addressBottom = address.offsetTop + address.offsetHeight;
+      const gapAfterAddress = 4; // px; intentional small clear gap
+      table.style.top = `${Math.ceil(addressBottom + gapAfterAddress)}px`;
+
+      table.classList.remove('table-compact', 'table-dense');
+      // The bilingual note and footer rule at the bottom remain unobstructed.
       const availableBottom = card.getBoundingClientRect().top + 175;
       if (table.getBoundingClientRect().bottom > availableBottom) table.classList.add('table-compact');
       if (table.getBoundingClientRect().bottom > availableBottom) table.classList.add('table-dense');
       const fits = table.getBoundingClientRect().bottom <= availableBottom;
-      notice.textContent = fits ? '' : 'टेबल PVC कार्ड में फिट नहीं हो रही है। कृपया कुछ rows हटाएँ या लंबे नाम छोटे करें।';
+      notice.textContent = fits ? '' : 'Address और Agriculture Table एक PVC कार्ड में फिट नहीं हो रहे हैं। कृपया पता या rows छोटी करें।';
       return fits;
     }
 
@@ -893,7 +949,8 @@
       document.getElementById('dispFarmerId').innerText = inputFarmerId.value;
       document.getElementById('dispDownloadDate').innerText = inputDownloadDate.value;
       document.getElementById('dispAddress').innerText = inputAddress.value;
-
+      // Reposition table on every address edit (no fixed table top).
+      requestAnimationFrame(fitLandTable);
       updateQRCode();
     }
 
@@ -914,6 +971,12 @@
         alert('टेबल PVC कार्ड में फिट नहीं हो रही है। कृपया कुछ rows हटाएँ या लंबे नाम छोटे करें।');
       }
     });
+
+    // Recheck after fonts are loaded, resizing, or print media changes.
+    window.addEventListener('resize', () => requestAnimationFrame(fitLandTable));
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => requestAnimationFrame(fitLandTable));
+    }
 
     // Initial Trigger
     bindSync();
