@@ -320,6 +320,53 @@
         print-color-adjust:exact;-webkit-print-color-adjust:exact;}
       .cards-wrapper{position:absolute!important;left:0;top:0;}
     }
+
+    /* v3: Dedicated title lanes prevent the logo, title and seal from colliding. */
+    .template-heading {left:4px;right:4px;top:4px;height:32px;display:block;}
+    .template-logo {position:absolute;left:6px;top:10px;width:45px;font-size:10px;white-space:nowrap;z-index:2;}
+    .heading-text {position:absolute;left:52px;right:31px;top:1px;height:27px;
+      padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      overflow:hidden;white-space:nowrap;}
+    .heading-text .mr {font-size:9px;line-height:12px;white-space:nowrap;}
+    .heading-text .en {font-size:12.1px;line-height:14px;letter-spacing:-.35px;white-space:nowrap;}
+    #backCard .heading-text .en {font-size:11.4px;letter-spacing:-.4px;}
+    .seal {right:4px;top:1px;width:29px;height:29px;}
+    .disp-address-text {left:19px;right:15px;top:40px;min-height:19px;
+      max-height:26px;overflow-wrap:anywhere;overflow:hidden;}
+    /* Seven columns must fit entirely inside the card; never scroll on PVC. */
+    .agri-table-overlay {left:17px;top:73px;width:289px;max-width:289px;
+      min-width:0;table-layout:fixed;border-spacing:0;overflow:visible;font-size:7px;}
+    .agri-table-overlay th,.agri-table-overlay td {box-sizing:border-box;min-width:0;
+      overflow:hidden;overflow-wrap:anywhere;word-break:normal;white-space:normal;
+      text-overflow:clip;line-height:1.15;padding:4px 1px;text-align:center;}
+    .agri-table-overlay th {font-size:7px;line-height:1.12;padding:5px 1px;}
+    .agri-table-overlay td {font-size:7.3px;}
+    .agri-table-overlay th:nth-child(1){width:12%}
+    .agri-table-overlay th:nth-child(2){width:17%}
+    .agri-table-overlay th:nth-child(3){width:17%}
+    .agri-table-overlay th:nth-child(4){width:18%}
+    .agri-table-overlay th:nth-child(5){width:12%}
+    .agri-table-overlay th:nth-child(6){width:11%}
+    .agri-table-overlay th:nth-child(7){width:13%}
+    .card-foot-rule {bottom:17px;left:4px;right:4px;}
+    .farmer-id-disp {bottom:18px;font-size:13px;}
+    .vertical-date-front,.vertical-date-back {left:3px;}
+    /* Print an A4 sheet with two CR80-size cards and no nested scrolling. */
+    @page {size:A4 portrait;margin:10mm;}
+    @media print {
+      html,body {width:auto!important;height:auto!important;margin:0!important;padding:0!important;
+        background:white!important;overflow:visible!important;}
+      body * {visibility:visible!important;}
+      h1,.editor-form,.print-btn,.table-notice {display:none!important;}
+      .main-container {display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;}
+      .cards-wrapper {position:static!important;display:flex!important;flex-direction:column!important;
+        gap:6mm!important;margin:0!important;padding:0!important;width:85.6mm!important;overflow:visible!important;}
+      .pvc-card {width:85.6mm!important;height:54mm!important;flex:none!important;
+        border:.15mm solid #aaa!important;box-shadow:none!important;break-inside:avoid!important;
+        page-break-inside:avoid!important;overflow:hidden!important;
+        print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important;}
+      .agri-table-overlay {overflow:visible!important;}
+    }
   </style>
 </head>
 <body>
