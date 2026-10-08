@@ -641,15 +641,16 @@
       #backCard .skilloprint-brand {print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important;}
     }
 
-    /* Front-card legibility: use the available lower space, without moving the
-       printed PVC size, image, QR, footer, agriculture table or fold gap. */
+    /* Front fields: slightly larger than the original (8.2px), but NOT bold.
+       Label and editable value have exactly matching size, face and weight. */
     #frontCard .info-details-front {
       top:45px;
       left:94px;
       right:89px;
-      font-size:10px;
-      line-height:1.32;
-      font-weight:600;
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      font-size:9.4px;
+      line-height:1.42;
+      font-weight:500;
       z-index:2;
     }
     #frontCard .info-details-front .info-line {
@@ -659,13 +660,16 @@
       margin-bottom:1px;
       align-items:start;
     }
-    #frontCard .info-details-front .info-line .key {
-      font-weight:800;
+    #frontCard .info-details-front .info-line .key,
+    #frontCard .info-details-front .info-line span:last-child {
+      font-family:inherit;
+      font-size:inherit;
+      line-height:inherit;
+      font-weight:500;
+      min-width:0;
     }
     #frontCard .info-details-front .info-line span:last-child {
-      font-weight:600;
       overflow-wrap:anywhere;
-      min-width:0;
     }
   </style>
 </head>
@@ -1022,13 +1026,13 @@
       document.getElementById('dispDownloadDate').textContent = stamped;
     }
 
-    // Prefer visibly larger front labels and values. If an unusually long name
-    // wraps, gently reduce only this text block so the Farmer ID stays clear.
+    // Matching label/value typography; for unusually long names, scale the
+    // entire block together only as needed to protect the footer.
     function fitFrontDetails() {
       const details = document.querySelector('#frontCard .info-details-front');
       const footer = document.querySelector('#frontCard .farmer-id-disp');
       if (!details || !footer) return;
-      let size = 10;
+      let size = 9.4;
       const safeBottom = footer.getBoundingClientRect().top - 6;
       details.style.fontSize = size + 'px';
       while (size > 8.4 && details.getBoundingClientRect().bottom > safeBottom) {
