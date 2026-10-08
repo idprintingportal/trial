@@ -324,13 +324,13 @@
     /* v3: Dedicated title lanes prevent the logo, title and seal from colliding. */
     .template-heading {left:4px;right:4px;top:4px;height:32px;display:block;}
     .template-logo {position:absolute;left:6px;top:10px;width:45px;font-size:10px;white-space:nowrap;z-index:2;}
-    .heading-text {position:absolute;left:52px;right:31px;top:1px;height:27px;
+    .heading-text {position:absolute;left:52px;right:10px;top:1px;height:27px;
       padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
       overflow:hidden;white-space:nowrap;}
     .heading-text .mr {font-size:9px;line-height:12px;white-space:nowrap;}
     .heading-text .en {font-size:12.1px;line-height:14px;letter-spacing:-.35px;white-space:nowrap;}
     #backCard .heading-text .en {font-size:11.4px;letter-spacing:-.4px;}
-    .seal {right:4px;top:1px;width:29px;height:29px;}
+    .seal {display:none !important; background:transparent !important; border:none !important; box-shadow:none !important;}
     .disp-address-text {left:19px;right:15px;top:40px;min-height:19px;
       max-height:26px;overflow-wrap:anywhere;overflow:hidden;}
     /* Seven columns must fit entirely inside the card; never scroll on PVC. */
@@ -366,6 +366,38 @@
         page-break-inside:avoid!important;overflow:hidden!important;
         print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important;}
       .agri-table-overlay {overflow:visible!important;}
+    }
+
+    /* PVC back-table: no scroll and exact seven-column printed grid. */
+    #backCard .disp-address-text {top:39px;left:18px;right:12px;font-family:Georgia,serif;
+      font-size:8.6px;line-height:1.22;max-height:31px;overflow:visible;}
+    #backCard .agri-table-overlay {top:76px;left:16px;width:291px;max-width:291px;
+      display:table!important;table-layout:fixed;border-collapse:collapse;
+      overflow:visible!important;background:#fff;border:1px solid #202020;
+      font-family:Georgia,serif;font-size:8.1px;}
+    #backCard .agri-table-overlay th {background:#a7cfc0;color:#164d3b;
+      border:1px solid #262626;padding:4px 1px;font-size:8.2px;
+      line-height:1.1;font-weight:700;overflow-wrap:normal;white-space:nowrap;}
+    #backCard .agri-table-overlay td {background:#fff;color:#161616;
+      border:1px solid #262626;padding:5px 1px;font-size:8.4px;
+      line-height:1.15;font-weight:700;white-space:normal;overflow-wrap:anywhere;
+      word-break:normal;text-align:center;vertical-align:middle;}
+    #backCard .agri-table-overlay th:nth-child(1){width:11%}
+    #backCard .agri-table-overlay th:nth-child(2){width:16%}
+    #backCard .agri-table-overlay th:nth-child(3){width:17%}
+    #backCard .agri-table-overlay th:nth-child(4){width:19%}
+    #backCard .agri-table-overlay th:nth-child(5){width:12%}
+    #backCard .agri-table-overlay th:nth-child(6){width:11%}
+    #backCard .agri-table-overlay th:nth-child(7){width:14%}
+    #backCard .agri-table-overlay.table-compact td {padding:3px 1px;font-size:7.6px;line-height:1.08;}
+    #backCard .agri-table-overlay.table-compact th {padding:3px 1px;font-size:7.7px;}
+    #backCard .agri-table-overlay.table-dense td {padding:2px 1px;font-size:6.7px;line-height:1.05;}
+    #backCard .agri-table-overlay.table-dense th {padding:2px 1px;font-size:7px;}
+    #landRowsContainer {max-width:100%;overflow-x:auto;}
+    #tableNotice {display:none;margin-top:10px;color:#a32920;max-width:420px;font-size:12px;font-weight:bold;}
+    #tableNotice:not(:empty) {display:block;}
+    @media print {
+      #backCard .agri-table-overlay {overflow:visible!important;}
     }
   </style>
 </head>
@@ -495,7 +527,7 @@
   </div>
 
   <p class="table-notice" id="tableNotice" role="alert"></p>
-  <button class="print-btn" onclick="window.print()">Print Cards</button>
+  <button class="print-btn" onclick="printCards()">Print Cards</button>
 
   <script>
     // Form Elements
@@ -541,7 +573,7 @@
     // Dynamic Land Table Rows
     function addLandRow() {
       const container = document.getElementById('landRowsContainer');
-      if (container.querySelectorAll('.land-row-input').length >= 5) { alert('PVC कार्ड में अधिकतम 5 पंक्तियाँ फिट होंगी।'); return; }
+      if (container.querySelectorAll('.land-row-input').length >= 5) { alert('एक कार्ड पर अधिकतम 5 rows रखी जा सकती हैं।'); return; }
       const rowDiv = document.createElement('div');
       rowDiv.className = 'land-row-input';
       rowDiv.innerHTML = `
@@ -580,6 +612,21 @@
         });
         tableDisplay.appendChild(tr);
       });
+      requestAnimationFrame(fitLandTable);
+    }
+
+    function fitLandTable() {
+      const table = document.getElementById('agriTableDisplay');
+      const card = document.getElementById('backCard');
+      const notice = document.getElementById('tableNotice');
+      table.classList.remove('table-compact','table-dense');
+      // Keep 18 px of safe space above the bottom rule, never add a scrollbar.
+      const availableBottom = card.getBoundingClientRect().top + 178;
+      if (table.getBoundingClientRect().bottom > availableBottom) table.classList.add('table-compact');
+      if (table.getBoundingClientRect().bottom > availableBottom) table.classList.add('table-dense');
+      const fits = table.getBoundingClientRect().bottom <= availableBottom;
+      notice.textContent = fits ? '' : 'टेबल PVC कार्ड में फिट नहीं हो रही है। कृपया कुछ rows हटाएँ या लंबे नाम छोटे करें।';
+      return fits;
     }
 
     function bindRowEvents() {
@@ -611,12 +658,17 @@
       elem.addEventListener('input', bindSync);
     });
 
+    function printCards() {
+      if (!fitLandTable()) return;
+      window.print();
+    }
+
     // Prevent cropped row content or layout spill in print. 
     window.addEventListener('beforeprint', () => {
       const t = document.getElementById('agriTableDisplay');
       const card = document.getElementById('backCard');
-      if (t.getBoundingClientRect().bottom > card.getBoundingClientRect().bottom - 12) {
-        alert('Agriculture table is too long for the PVC card. Please shorten entries or remove rows before printing.');
+      if (!fitLandTable()) {
+        alert('टेबल PVC कार्ड में फिट नहीं हो रही है। कृपया कुछ rows हटाएँ या लंबे नाम छोटे करें।');
       }
     });
 
