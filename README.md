@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="mr">
 <head>
   <meta charset="UTF-8">
@@ -639,6 +640,33 @@
     @media print {
       #backCard .skilloprint-brand {print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important;}
     }
+
+    /* Front-card legibility: use the available lower space, without moving the
+       printed PVC size, image, QR, footer, agriculture table or fold gap. */
+    #frontCard .info-details-front {
+      top:45px;
+      left:94px;
+      right:89px;
+      font-size:10px;
+      line-height:1.32;
+      font-weight:600;
+      z-index:2;
+    }
+    #frontCard .info-details-front .info-line {
+      display:grid;
+      grid-template-columns:43px minmax(0,1fr);
+      gap:3px;
+      margin-bottom:1px;
+      align-items:start;
+    }
+    #frontCard .info-details-front .info-line .key {
+      font-weight:800;
+    }
+    #frontCard .info-details-front .info-line span:last-child {
+      font-weight:600;
+      overflow-wrap:anywhere;
+      min-width:0;
+    }
   </style>
 </head>
 <body>
@@ -994,6 +1022,21 @@
       document.getElementById('dispDownloadDate').textContent = stamped;
     }
 
+    // Prefer visibly larger front labels and values. If an unusually long name
+    // wraps, gently reduce only this text block so the Farmer ID stays clear.
+    function fitFrontDetails() {
+      const details = document.querySelector('#frontCard .info-details-front');
+      const footer = document.querySelector('#frontCard .farmer-id-disp');
+      if (!details || !footer) return;
+      let size = 10;
+      const safeBottom = footer.getBoundingClientRect().top - 6;
+      details.style.fontSize = size + 'px';
+      while (size > 8.4 && details.getBoundingClientRect().bottom > safeBottom) {
+        size = Math.max(8.4, +(size - 0.2).toFixed(1));
+        details.style.fontSize = size + 'px';
+      }
+    }
+
     // Static Fields Sync
     function bindSync() {
       const enteredApproval = inputApprovalDate.value.trim();
@@ -1011,6 +1054,7 @@
       document.getElementById('dispAddress').innerText = inputAddress.value;
       // Reposition table on every address edit (no fixed table top).
       requestAnimationFrame(fitLandTable);
+      requestAnimationFrame(fitFrontDetails);
       updateQRCode();
     }
 
@@ -1025,6 +1069,7 @@
 
     function printCards() {
       syncDownloadDate();
+      fitFrontDetails();
       if (!fitLandTable()) return;
       window.print();
     }
@@ -1032,6 +1077,7 @@
     // Prevent cropped row content or layout spill in print. 
     window.addEventListener('beforeprint', () => {
       syncDownloadDate();
+      fitFrontDetails();
       const t = document.getElementById('agriTableDisplay');
       const card = document.getElementById('backCard');
       if (!fitLandTable()) {
@@ -1040,9 +1086,15 @@
     });
 
     // Recheck after fonts are loaded, resizing, or print media changes.
-    window.addEventListener('resize', () => requestAnimationFrame(fitLandTable));
+    window.addEventListener('resize', () => {
+      requestAnimationFrame(fitLandTable);
+      requestAnimationFrame(fitFrontDetails);
+    });
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => requestAnimationFrame(fitLandTable));
+      document.fonts.ready.then(() => {
+        requestAnimationFrame(fitLandTable);
+        requestAnimationFrame(fitFrontDetails);
+      });
     }
 
     // Initial Trigger
