@@ -125,27 +125,17 @@
       background-image: url('back-bg.png'); 
     }
 
-    /* FIXED: Vertical Dates Positioning (Separated from table margin) */
-    .vertical-date-front {
+    /* Both vertical dates stay inside the safe print area. */
+    .vertical-date-front, .vertical-date-back {
       position: absolute;
-      left: 6px;
-      bottom: 25px;
-      transform: rotate(-90deg);
-      transform-origin: left bottom;
-      font-size: 7.5px;
-      font-weight: bold;
-      color: #000;
-      white-space: nowrap;
-      z-index: 10;
-    }
-
-    .vertical-date-back {
-      position: absolute;
-      left: 6px;
-      bottom: 25px;
-      transform: rotate(-90deg);
-      transform-origin: left bottom;
-      font-size: 7.5px;
+      left: 11px;
+      top: 41px;
+      height: 139px;
+      max-width: 12px;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 7px;
+      line-height: 1.1;
       font-weight: bold;
       color: #000;
       white-space: nowrap;
@@ -218,23 +208,31 @@
       line-height: 1.2;
     }
 
-    /* FIXED: Table Position (Clear Gap from Vertical Date Text) */
-    .agri-table-overlay {
+    /* Fixed back-side viewport: rows scale inside the PVC edges. */
+    .agri-table-area {
       position: absolute;
-      top: 80px;
-      left: 38px; /* Safe Margin from left edge */
-      width: 270px;
+      top: 83px;
+      left: 38px;
+      right: 15px;
+      bottom: 12px;
+      overflow: hidden;
+    }
+    .agri-table-overlay {
+      width: 100%;
+      table-layout: fixed;
       border-collapse: collapse;
       font-size: 7.5px;
       text-align: center;
       background: transparent;
+      transform-origin: top left;
     }
     .agri-table-overlay td {
       padding: 3px 1px;
       font-weight: bold;
       color: #000;
       border: 0.5px solid #ccc;
-      background: #fff; /* Ensures clear visibility */
+      background: #fff;
+      overflow-wrap: anywhere;
     }
 
     .print-btn {
@@ -371,9 +369,11 @@
         </div>
 
         <!-- Dynamic Agriculture Table -->
-        <table class="agri-table-overlay" id="agriTableDisplay">
-          <!-- Rows render dynamically -->
-        </table>
+        <div class="agri-table-area" id="agriTableArea">
+          <table class="agri-table-overlay" id="agriTableDisplay">
+            <!-- Rows render dynamically -->
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -446,26 +446,33 @@
       renderLandTable();
     }
 
-    function renderLandTable() {
-      const container = document.getElementById('landRowsContainer');
-      const rows = container.getElementsByClassName('land-row-input');
-      const tableDisplay = document.getElementById('agriTableDisplay');
-      tableDisplay.innerHTML = '';
+    function fitLandTable() {
+      const area = document.getElementById('agriTableArea');
+      const table = document.getElementById('agriTableDisplay');
+      table.style.transform = 'none';
+      table.style.width = '100%';
+      const naturalHeight = table.offsetHeight;
+      if (!naturalHeight) return;
+      const scale = Math.min(1, area.clientHeight / naturalHeight);
+      // Resize width inversely so that the scaled table still fills the back panel.
+      table.style.width = `${100 / scale}%`;
+      table.style.transform = `scale(${scale})`;
+    }
 
-      Array.from(rows).forEach(row => {
-        const inputs = row.getElementsByTagName('input');
+    function renderLandTable() {
+      const rows = document.querySelectorAll('#landRowsContainer .land-row-input');
+      const tableDisplay = document.getElementById('agriTableDisplay');
+      tableDisplay.replaceChildren();
+      rows.forEach(row => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td style="width: 36px;">${inputs[0].value}</td>
-          <td style="width: 46px;">${inputs[1].value}</td>
-          <td style="width: 46px;">${inputs[2].value}</td>
-          <td style="width: 46px;">${inputs[3].value}</td>
-          <td style="width: 30px;">${inputs[4].value}</td>
-          <td style="width: 28px;">${inputs[5].value}</td>
-          <td style="width: 38px;">${inputs[6].value}</td>
-        `;
+        row.querySelectorAll('input').forEach(input => {
+          const td = document.createElement('td');
+          td.textContent = input.value;
+          tr.appendChild(td);
+        });
         tableDisplay.appendChild(tr);
       });
+      fitLandTable();
     }
 
     function bindRowEvents() {
@@ -501,6 +508,8 @@
     bindSync();
     bindRowEvents();
     renderLandTable();
+    window.addEventListener('resize', fitLandTable);
+    window.addEventListener('beforeprint', fitLandTable);
   </script>
 </body>
 </html>
